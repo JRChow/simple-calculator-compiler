@@ -80,11 +80,11 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 20 "c5.y"
+#line 19 "c5.y"
 {
-    int iValue;                 /* integer value */
-    char sIndex;                /* symbol table index */
-    nodeType *nPtr;             /* node pointer */
+    int iValue;                 /* Integer value */
+    char sIndex;                /* Symbol table index */
+    nodeType *nPtr;             /* Node pointer */
 }
 /* Line 1529 of yacc.c.  */
 #line 91 "y.tab.h"

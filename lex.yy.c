@@ -760,30 +760,30 @@ case 1:
 YY_RULE_SETUP
 #line 10 "c5.l"
 { 
-                yylval.sIndex = *yytext - 'a';
-                return VARIABLE;
-            }
+                  yylval.sIndex = *yytext - 'a';
+                  return VARIABLE;
+              }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
 #line 15 "c5.l"
 {
-                yylval.iValue = atoi(yytext);
-                return INTEGER;
-            }
+                  yylval.iValue = atoi(yytext);
+                  return INTEGER;
+              }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
 #line 20 "c5.l"
 {
-                yylval.iValue = atoi(yytext);
-                return INTEGER;
-            }
+                  yylval.iValue = atoi(yytext);
+                  return INTEGER;
+              }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
 #line 25 "c5.l"
-{ return *yytext; }
+return *yytext;
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
@@ -849,13 +849,13 @@ case 17:
 /* rule 17 can match eol */
 YY_RULE_SETUP
 #line 40 "c5.l"
-;    /* skip comments */
+;    /* Skip comments */
 	YY_BREAK
 case 18:
 /* rule 18 can match eol */
 YY_RULE_SETUP
 #line 42 "c5.l"
-;    /* ignore whitespace */
+;    /* Ignore whitespace */
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
