@@ -11,9 +11,9 @@ int ex(nodeType *p) {
   if (!p) return 0;
 
   switch (p->type) {
-      case typeCon:  // Constants
-        /*printf("\tpush\t%d\n", p->con.value);*/
-        break;
+      case typeCon:  /* Constants */
+          printf("\tpush\t%d\n", p->con.value);
+          break;
 
       case typeId:  // Variables
         /*printf("\tpush\t%c\n", p->id.i + 'a');*/
@@ -66,8 +66,11 @@ int ex(nodeType *p) {
               break;
 
             case PRINT:
-              /*ex(p->opr.op[0]);*/
-              /*printf("\tprint\n");*/
+              // TODO: put* depends on the type... default to int just for now
+              //       dunno if the type is already encoded in the current struct
+              //       if not, needa modify the struct definition
+              ex(p->opr.op[0]);
+              printf("\tputi\n");
               break;
 
             case '=':
