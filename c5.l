@@ -23,6 +23,21 @@ void yyerror(char *);
                   return CHAR;
               }
 
+\".*\"        {
+                  //    "\"abc\"" -> strlen = 5; sLen = 3; need = 4;
+                  /* Length of the inside string */
+                  int sLen = strlen(yytext) - 2;
+                  if (sLen == 0) {  /* Empty string "" */
+                      yylval.iValue = 0;
+                  } else {  /* Non-empty string */
+                      char* cpy = (char*) calloc( sLen + 1, sizeof(char) );
+                      memcpy(cpy, &yytext[1], sLen);
+                      cpy[sLen] = '\0';
+                      yylval.iValue = (int) cpy;
+                  }
+                  return STR;
+              }
+
 [a-z]         { 
                   yylval.sIndex = *yytext - 'a';
                   return VARIABLE;

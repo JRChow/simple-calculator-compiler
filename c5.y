@@ -22,7 +22,7 @@ int sym[26];                    /* Symbol table */
     nodeType *nPtr;             /* Node pointer */
 };
 
-%token <iValue> INTEGER CHAR
+%token <iValue> INTEGER CHAR STR
 %token <sIndex> VARIABLE
 %token FOR WHILE IF PRINT READ
 %nonassoc IFX
@@ -69,6 +69,7 @@ stmt_list:
 expr:
           INTEGER               { $$ = con($1);             }
         | CHAR                  { $$ = con($1);             }
+        | STR                   { $$ = con($1);             }
         | VARIABLE              { $$ = id($1);              }
         | '-' expr %prec UMINUS { $$ = opr(UMINUS, 1, $2);  }
         | expr '+' expr         { $$ = opr('+', 2, $1, $3); }
