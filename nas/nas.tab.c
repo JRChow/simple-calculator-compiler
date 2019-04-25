@@ -1488,7 +1488,7 @@ yyreduce:
 
   case 7:
 #line 76 "nas.y"
-    { 
+    {
 		in[pc] = PUSHI;
 		str = (char *) malloc(strlen((yyvsp[(2) - (2)].s))+1);
 		strcpy(str, (yyvsp[(2) - (2)].s)); op[pc++] = (long) str;
