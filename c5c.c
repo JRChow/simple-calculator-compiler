@@ -15,7 +15,7 @@ int ex(nodeType *p) {
           printf("\tpush\t%d\n", p->con.value);
           break;
 
-      case typeId:  // Variables
+      case typeId:  /* Variables */
         /*printf("\tpush\t%c\n", p->id.i + 'a');*/
         break;
 
@@ -77,6 +77,7 @@ int ex(nodeType *p) {
 
             case '=':  /* Assignment operator */
               ex(p->opr.op[1]);
+              /*printf("\tpop\t%c\n", p->opr.op[0]->id.i + 'a');*/
               break;
 
             case UMINUS:

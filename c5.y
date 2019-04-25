@@ -19,11 +19,13 @@ int sym[26];                    /* Symbol table */
 %union {
     int iValue;                 /* Integer value */
     char sIndex;                /* Symbol table index */
+    char cValue;                /* Character value */
     nodeType *nPtr;             /* Node pointer */
 };
 
 %token <iValue> INTEGER
 %token <sIndex> VARIABLE
+%token <cValue> CHAR
 %token FOR WHILE IF PRINT READ
 %nonassoc IFX
 %nonassoc ELSE

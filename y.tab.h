@@ -41,39 +41,41 @@
    enum yytokentype {
      INTEGER = 258,
      VARIABLE = 259,
-     FOR = 260,
-     WHILE = 261,
-     IF = 262,
-     PRINT = 263,
-     READ = 264,
-     IFX = 265,
-     ELSE = 266,
-     OR = 267,
-     AND = 268,
-     NE = 269,
-     EQ = 270,
-     LE = 271,
-     GE = 272,
-     UMINUS = 273
+     CHAR = 260,
+     FOR = 261,
+     WHILE = 262,
+     IF = 263,
+     PRINT = 264,
+     READ = 265,
+     IFX = 266,
+     ELSE = 267,
+     OR = 268,
+     AND = 269,
+     NE = 270,
+     EQ = 271,
+     LE = 272,
+     GE = 273,
+     UMINUS = 274
    };
 #endif
 /* Tokens.  */
 #define INTEGER 258
 #define VARIABLE 259
-#define FOR 260
-#define WHILE 261
-#define IF 262
-#define PRINT 263
-#define READ 264
-#define IFX 265
-#define ELSE 266
-#define OR 267
-#define AND 268
-#define NE 269
-#define EQ 270
-#define LE 271
-#define GE 272
-#define UMINUS 273
+#define CHAR 260
+#define FOR 261
+#define WHILE 262
+#define IF 263
+#define PRINT 264
+#define READ 265
+#define IFX 266
+#define ELSE 267
+#define OR 268
+#define AND 269
+#define NE 270
+#define EQ 271
+#define LE 272
+#define GE 273
+#define UMINUS 274
 
 
 
@@ -84,10 +86,11 @@ typedef union YYSTYPE
 {
     int iValue;                 /* Integer value */
     char sIndex;                /* Symbol table index */
+    char cValue;                /* Character value */
     nodeType *nPtr;             /* Node pointer */
 }
 /* Line 1529 of yacc.c.  */
-#line 91 "y.tab.h"
+#line 94 "y.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

@@ -22,6 +22,11 @@ void yyerror(char *);
                   return INTEGER;
               }
 
+\'.*\'        {
+                  yylval.cValue = *yytext;
+                  return CHAR;
+              }
+
 [-()<>=+*/;{}.%]  return *yytext;
 
 ">="              return GE;
