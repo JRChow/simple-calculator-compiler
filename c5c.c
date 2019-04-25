@@ -68,7 +68,9 @@ int ex(nodeType *p) {
             case PRINT:
               // TODO: put* depends on the type... default to int just for now
               //       dunno if the type is already encoded in the current struct
-              //       if not, needa modify the struct definition
+              //       if not, needa modify the struct definition...
+              //       Update: ok there's only int and var now, needa add char & string,
+              //               working on that right now!
               ex(p->opr.op[0]);
               printf("\tputi\n");
               break;
