@@ -372,9 +372,9 @@ struct yy_trans_info
 static yyconst flex_int16_t yy_accept[56] =
     {   0,
         0,    0,   22,   20,   19,   19,   20,    5,   20,   20,
-        5,    2,    3,    5,    5,    5,    1,    1,    1,    1,
-        1,    1,    1,   20,   19,    9,   16,    0,    4,    0,
-        3,    7,    8,    6,    0,    0,   12,    0,    0,    0,
+        5,    1,    2,    5,    5,    5,    4,    4,    4,    4,
+        4,    4,    4,   20,   19,    9,   16,    0,    3,    0,
+        2,    7,    8,    6,    0,    0,   12,    0,    0,    0,
        17,    0,   18,    0,   10,    0,    0,    0,   13,    0,
        15,    0,   14,   11,    0
     } ;
@@ -761,9 +761,9 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 YY_RULE_SETUP
 #line 10 "c5.l"
-{ 
-                  yylval.sIndex = *yytext - 'a';
-                  return VARIABLE;
+{
+                  yylval.iValue = atoi(yytext);
+                  return INTEGER;
               }
 	YY_BREAK
 case 2:
@@ -778,106 +778,107 @@ case 3:
 YY_RULE_SETUP
 #line 20 "c5.l"
 {
-                  yylval.iValue = atoi(yytext);
-                  return INTEGER;
+                  /* Just cast char into int to get ASCII value */
+                  yylval.iValue = (int) yytext[1];
+                  return CHAR;
               }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 25 "c5.l"
-{
-                  yylval.cValue = *yytext;
-                  return CHAR;
+#line 26 "c5.l"
+{ 
+                  yylval.sIndex = *yytext - 'a';
+                  return VARIABLE;
               }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 30 "c5.l"
+#line 31 "c5.l"
 return *yytext;
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 32 "c5.l"
+#line 33 "c5.l"
 return GE;
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 33 "c5.l"
+#line 34 "c5.l"
 return LE;
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 34 "c5.l"
+#line 35 "c5.l"
 return EQ;
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 35 "c5.l"
+#line 36 "c5.l"
 return NE;
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 36 "c5.l"
+#line 37 "c5.l"
 return FOR;
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 37 "c5.l"
+#line 38 "c5.l"
 return WHILE;
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 38 "c5.l"
+#line 39 "c5.l"
 return IF;
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 39 "c5.l"
+#line 40 "c5.l"
 return ELSE;
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 40 "c5.l"
+#line 41 "c5.l"
 return PRINT;
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 41 "c5.l"
+#line 42 "c5.l"
 return READ;
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 42 "c5.l"
+#line 43 "c5.l"
 return AND;
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 43 "c5.l"
+#line 44 "c5.l"
 return OR;
 	YY_BREAK
 case 18:
 /* rule 18 can match eol */
 YY_RULE_SETUP
-#line 45 "c5.l"
+#line 46 "c5.l"
 ;    /* Skip comments */
 	YY_BREAK
 case 19:
 /* rule 19 can match eol */
 YY_RULE_SETUP
-#line 47 "c5.l"
+#line 48 "c5.l"
 ;    /* Ignore whitespace */
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 49 "c5.l"
+#line 50 "c5.l"
 yyerror("Unknown character");
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 51 "c5.l"
+#line 52 "c5.l"
 ECHO;
 	YY_BREAK
-#line 881 "lex.yy.c"
+#line 882 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1874,7 +1875,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 51 "c5.l"
+#line 52 "c5.l"
 
 
 

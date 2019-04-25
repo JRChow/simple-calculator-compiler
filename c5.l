@@ -7,11 +7,6 @@ void yyerror(char *);
 
 %%
 
-[a-z]         { 
-                  yylval.sIndex = *yytext - 'a';
-                  return VARIABLE;
-              }
-
 0             {
                   yylval.iValue = atoi(yytext);
                   return INTEGER;
@@ -23,8 +18,14 @@ void yyerror(char *);
               }
 
 \'.*\'        {
-                  yylval.cValue = *yytext;
+                  /* Just cast char into int to get ASCII value */
+                  yylval.iValue = (int) yytext[1];
                   return CHAR;
+              }
+
+[a-z]         { 
+                  yylval.sIndex = *yytext - 'a';
+                  return VARIABLE;
               }
 
 [-()<>=+*/;{}.%]  return *yytext;

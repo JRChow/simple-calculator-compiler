@@ -1,3 +1,3 @@
-x = 'c';
+x = 'c';  //
 i = 27;
-s = "hello, world!";
+// s = "hello, world!";

@@ -40,8 +40,8 @@
       know about them.  */
    enum yytokentype {
      INTEGER = 258,
-     VARIABLE = 259,
-     CHAR = 260,
+     CHAR = 259,
+     VARIABLE = 260,
      FOR = 261,
      WHILE = 262,
      IF = 263,
@@ -60,8 +60,8 @@
 #endif
 /* Tokens.  */
 #define INTEGER 258
-#define VARIABLE 259
-#define CHAR 260
+#define CHAR 259
+#define VARIABLE 260
 #define FOR 261
 #define WHILE 262
 #define IF 263
@@ -86,11 +86,10 @@ typedef union YYSTYPE
 {
     int iValue;                 /* Integer value */
     char sIndex;                /* Symbol table index */
-    char cValue;                /* Character value */
     nodeType *nPtr;             /* Node pointer */
 }
 /* Line 1529 of yacc.c.  */
-#line 94 "y.tab.h"
+#line 93 "y.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
