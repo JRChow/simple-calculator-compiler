@@ -75,9 +75,8 @@ int ex(nodeType *p) {
               printf("\tputi\n");
               break;
 
-            case '=':
-              /*ex(p->opr.op[1]);*/
-              /*printf("\tpop\t%c\n", p->opr.op[0]->id.i + 'a');*/
+            case '=':  /* Assignment operator */
+              ex(p->opr.op[1]);
               break;
 
             case UMINUS:
