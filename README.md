@@ -6,5 +6,6 @@
 
 ## To run
 
-`./c5c test/fact.sc > out/fact.sas`
+- To compile: `./c5c test/fact.sc > out/fact.as`
+- To execute using `nas`: `./nas/nas out/fact.as`
 
