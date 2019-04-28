@@ -14,7 +14,7 @@ typedef struct {
     };
 } ConstNode;
 
-/* Identifiers */
+/* Variables */
 typedef struct {
     char name[13];      /* Key: name of variable */
     dataEnum dataType;

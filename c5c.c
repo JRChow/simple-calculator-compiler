@@ -11,16 +11,19 @@ static int lbl;
 /* Global variable count */
 int glbVarCnt = 0;             
 
-void updateVar(Node* left, Node* right) {
+/* Copy variable node into hash table for add/update,
+ * and set datatypes for both the node and the copy. */
+void updateVar(Node* var, dataEnum dataType) {
     /*printf("Start updating...\n");*/
-    assert(left->nodeType == typeId);
+    assert(var->nodeType == typeId);
     VarNode* cpy = malloc(sizeof(VarNode));
     VarNode* useless;
 
     /* Name */
-    strncpy(cpy->name, left->id.name, strlen(left->id.name) + 1);
+    strncpy(cpy->name, var->id.name, strlen(var->id.name) + 1);
     /* Data type */
-    cpy->dataType = right->dataType;
+    var->dataType = dataType;
+    cpy->dataType = dataType;
     /*printf("[c5c.c] updateVar(): %s dataType updated to %d\n", cpy->name, cpy->dataType);*/
     /* Scope */
     cpy->scope = typeGlobal;  /* TODO: Assume all global now... */
@@ -32,7 +35,7 @@ void updateVar(Node* left, Node* right) {
     /*[>varBlock->name = var->id.name;<]*/
     /*[>strncpy(varBlock->name, var->id.name, strlen(var->id.name) + 1);<]*/
     /*[>printf("Name copied\n");<]*/
-    /*left->dataType = right->dataType;*/
+    /*var->dataType = right->dataType;*/
     /*var->dataType = right->dataType;*/
     /*printf("Datatype updated\n");*/
     /*[>var->dataType = exp->dataType;<]*/
@@ -88,6 +91,51 @@ int ex(Node *p) {
       case typeOpr:  // Operators
 
         switch (p->opr.oper) {
+            case GETI:
+                printf("\tgeti\n");
+                updateVar(p, typeInt);
+                break;
+
+            case GETC:
+                printf("\tgetc\n");
+                updateVar(p, typeChr);
+                break;
+
+            case GETS:
+                printf("\tgets\n");
+                updateVar(p, typeStr);
+                break;
+
+            case PUTI:
+                ex(p->opr.op[0]);
+                printf("\tputi\n");
+                break;
+
+            case PUTI_:
+                ex(p->opr.op[0]);
+                printf("\tputi_\n");
+                break;
+
+            case PUTC:
+                ex(p->opr.op[0]);
+                printf("\tputc\n");
+                break;
+
+            case PUTC_:
+                ex(p->opr.op[0]);
+                printf("\tputc_\n");
+                break;
+
+            case PUTS:
+                ex(p->opr.op[0]);
+                printf("\tputs\n");
+                break;
+
+            case PUTS_:
+                ex(p->opr.op[0]);
+                printf("\tputs_\n");
+                break;
+
             case FOR:  // TODO
               /*ex(p->opr.op[0]);*/
               /*printf("L%03d:\n", lblx = lbl++);*/
@@ -153,7 +201,7 @@ int ex(Node *p) {
             case '=':  /* Assignment operator */
               ex(p->opr.op[1]);
               /* Update hash table */
-              updateVar(p->opr.op[0], p->opr.op[1]);
+              updateVar(p->opr.op[0], p->opr.op[1]->dataType);
               break;
 
             case UMINUS:
