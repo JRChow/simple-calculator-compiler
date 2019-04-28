@@ -5,26 +5,33 @@
 #include "calc3.h"
 
 /* Prototypes */
-nodeType *opr(int oper, int nops, ...);
-nodeType *id(int i);
-nodeType *con(int value);
-void freeNode(nodeType *p);
-int ex(nodeType *p);
+Node* opr(int oper, int nops, ...);
+Node* id(char* name);
+Node* con(void* value, dataEnum type);
+void freeNode(Node *p);
+int ex(Node *p);
 int yylex(void);
-
 void yyerror(char *s);
-int sym[26];                    /* Symbol table */
+
+VarNode* sym = NULL;  /* Hash table */
+
+
 %}
 
 %union {
-    int iValue;                 /* Integer value */
-    char sIndex;                /* Symbol table index */
-    nodeType *nPtr;             /* Node pointer */
+    int iValue;        /* Integer value */
+    char cValue;       /* Character value */
+    char* sValue;      /* String value */
+    /*char sIndex;       [> Symbol table index <]*/
+    Node *nPtr;    /* Node pointer */
+    char varName[13];  /* String value */
 };
 
-%token <iValue> INTEGER CHAR STR
-%token <sIndex> VARIABLE
-%token FOR WHILE IF PRINT READ
+%token <iValue> INTEGER
+%token <cValue> CHAR
+%token <sValue> STR
+%token <varName> VARIABLE
+%token FOR WHILE IF PRINT READ ASS_INT ASS_CHR ASS_STR
 %nonassoc IFX
 %nonassoc ELSE
 
@@ -52,8 +59,10 @@ stmt:
           ';'                             { $$ = opr(';', 2, NULL, NULL);     }
         | expr ';'                        { $$ = $1;                          }
         | PRINT expr ';'                  { $$ = opr(PRINT, 1, $2);           }
-	    | READ VARIABLE ';'               { $$ = opr(READ, 1, id($2));        }
+	    | READ VARIABLE ';'               { /* $$ = opr(READ, 1, id($2)); */       }
         | VARIABLE '=' expr ';'           { $$ = opr('=', 2, id($1), $3);     }
+        | VARIABLE '=' CHAR ';'           { $$ = opr('=', 2, id($1), con(&$3, typeChr)); }
+        | VARIABLE '=' STR ';'            { $$ = opr('=', 2, id($1), con($3, typeStr));     }
         | FOR '(' stmt stmt stmt ')' stmt { $$ = opr(FOR, 4, $3, $4, $5, $7); }
         | WHILE '(' expr ')' stmt         { $$ = opr(WHILE, 2, $3, $5);       }
         | IF '(' expr ')' stmt %prec IFX  { $$ = opr(IF, 2, $3, $5);          }
@@ -67,9 +76,7 @@ stmt_list:
         ;
 
 expr:
-          INTEGER               { $$ = con($1);             }
-        | CHAR                  { $$ = con($1);             }
-        | STR                   { $$ = con($1);             }
+          INTEGER               { $$ = con(&$1, typeInt);    }
         | VARIABLE              { $$ = id($1);              }
         | '-' expr %prec UMINUS { $$ = opr(UMINUS, 1, $2);  }
         | expr '+' expr         { $$ = opr('+', 2, $1, $3); }
@@ -92,66 +99,84 @@ expr:
 
 #define SIZEOF_NODETYPE ((char *)&p->con - (char *)p)
 
-nodeType *con(int value) {
-    nodeType *p;
+Node* con(void* value, dataEnum dataType) {
+    Node* p;
     size_t nodeSize;
 
     /* Allocate node */
-    nodeSize = SIZEOF_NODETYPE + sizeof(conNodeType);
+    nodeSize = SIZEOF_NODETYPE + sizeof(ConstNode);
     if ((p = malloc(nodeSize)) == NULL)
         yyerror("out of memory");
 
     /* Copy information */
-    p->type = typeCon;
-    p->con.value = value;
+    p->nodeType = typeCon;
+    p->dataType = dataType;
+    p->con.dataType = dataType;
+    // TODO:
+    switch (dataType) {
+        case typeInt:
+            p->con.iVal = *((int*) value);
+            break;
+        case typeChr: 
+            p->con.cVal = *((char*) value); 
+            break;
+        case typeStr:
+            p->con.sVal = (char*) value;
+            break;
+    }
+    /*p->con.value = value;*/
+
+    /*printf("Making con of type [%d]\n", dataType);*/
 
     return p;
 }
 
-nodeType *id(int i) {
-    nodeType *p;
+Node* id(char* name) {
+    Node* p;
     size_t nodeSize;
 
     /* Allocate node */
-    nodeSize = SIZEOF_NODETYPE + sizeof(idNodeType);
+    nodeSize = SIZEOF_NODETYPE + sizeof(VarNode);
     if ((p = malloc(nodeSize)) == NULL)
         yyerror("out of memory");
 
     /* Copy information */
-    p->type = typeId;
-    p->id.i = i;
+    p->nodeType = typeId;
+    strncpy(p->id.name, name, strlen(name) + 1);
+    /*printf("{strncpy} dest = %s, src = %s\n", p->id.name, name);*/
+    /*printf("[c5.y] created ID: %s\n", name);*/
 
     return p;
 }
 
-nodeType *opr(int oper, int nops, ...) {
+Node* opr(int oper, int nops, ...) {
     va_list ap;
-    nodeType *p;
+    Node* p;
     size_t nodeSize;
     int i;
 
     /* Allocate node */
-    nodeSize = SIZEOF_NODETYPE + sizeof(oprNodeType) +
-        (nops - 1) * sizeof(nodeType*);
+    nodeSize = SIZEOF_NODETYPE + sizeof(OprNode) +
+        (nops - 1) * sizeof(Node*);
     if ((p = malloc(nodeSize)) == NULL)
         yyerror("out of memory");
 
     /* Copy information */
-    p->type = typeOpr;
+    p->nodeType = typeOpr;
     p->opr.oper = oper;
     p->opr.nops = nops;
     va_start(ap, nops);
     for (i = 0; i < nops; i++)
-        p->opr.op[i] = va_arg(ap, nodeType*);
+        p->opr.op[i] = va_arg(ap, Node*);
     va_end(ap);
     return p;
 }
 
-void freeNode(nodeType *p) {
+void freeNode(Node *p) {
     int i;
 
     if (!p) return;
-    if (p->type == typeOpr) {
+    if (p->nodeType == typeOpr) {
         for (i = 0; i < p->opr.nops; i++)
             freeNode(p->opr.op[i]);
     }

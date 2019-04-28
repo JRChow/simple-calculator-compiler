@@ -1,32 +1,58 @@
+#include "uthash.h"
+
 typedef enum { typeCon, typeId, typeOpr } nodeEnum;
+typedef enum { typeInt, typeChr, typeStr } dataEnum;
+typedef enum { typeLocal, typeGlobal } scopeEnum;
 
-/* constants */
+/* Constants */
 typedef struct {
-  int value; /* value of constant */
-} conNodeType;
+    dataEnum dataType; /* Type of data (can be null) */
+    union {
+        int iVal;    /* Int value    */
+        char cVal;   /* Char value   */
+        char* sVal;  /* String value */
+    };
+} ConstNode;
 
-/* identifiers */
+/* Identifiers */
 typedef struct {
-  int i; /* subscript to sym array */
-} idNodeType;
+    char name[13];      /* Key: name of variable */
+    dataEnum dataType;
+    scopeEnum scope;
+    int idx;            /* Subscript to pointer */
+    UT_hash_handle hh;  /* Make this struct hashable */
+} VarNode;
 
-/* operators */
+/* Operators */
 typedef struct {
-  int                 oper;  /* operator */
-  int                 nops;  /* number of operands */
-  struct nodeTypeTag *op[1]; /* operands (expandable) */
-} oprNodeType;
+  int                 oper;     /* Operator */
+  int                 nops;     /* Number of operands */
+  struct nodeTypeTag *op[1];    /* Operands (expandable) */
+} OprNode;
 
 typedef struct nodeTypeTag {
-  nodeEnum type; /* type of node */
+  nodeEnum nodeType; /* Type of node */
+  dataEnum dataType; /* Type of data (can be null) */
 
-  /* union must be last entry in nodeType */
+  /* Union must be last entry in nodeType          */
   /* because operNodeType may dynamically increase */
   union {
-    conNodeType con; /* constants */
-    idNodeType  id;  /* identifiers */
-    oprNodeType opr; /* operators */
+    ConstNode con; /* Constants   */
+    VarNode  id;   /* Variables */
+    OprNode opr;   /* Operators   */
   };
-} nodeType;
+} Node;
 
-extern int sym[26];
+/* ---------------------------------------------- */
+
+/* Hash table unit */
+//typedef struct {
+    //char name[13];  [> Key (maximum 12 characters) <]
+    //dataEnum dataType;
+    //scopeEnum scope;
+    //int idx;  [> Subscript to pointer <]
+    //UT_hash_handle hh;  [> Make this struct hashable <]
+//} varInfo;
+
+//extern int sym[26];
+extern VarNode* sym;  /* Hash table */

@@ -48,15 +48,18 @@
      IF = 264,
      PRINT = 265,
      READ = 266,
-     IFX = 267,
-     ELSE = 268,
-     OR = 269,
-     AND = 270,
-     NE = 271,
-     EQ = 272,
-     LE = 273,
-     GE = 274,
-     UMINUS = 275
+     ASS_INT = 267,
+     ASS_CHR = 268,
+     ASS_STR = 269,
+     IFX = 270,
+     ELSE = 271,
+     OR = 272,
+     AND = 273,
+     NE = 274,
+     EQ = 275,
+     LE = 276,
+     GE = 277,
+     UMINUS = 278
    };
 #endif
 /* Tokens.  */
@@ -69,29 +72,35 @@
 #define IF 264
 #define PRINT 265
 #define READ 266
-#define IFX 267
-#define ELSE 268
-#define OR 269
-#define AND 270
-#define NE 271
-#define EQ 272
-#define LE 273
-#define GE 274
-#define UMINUS 275
+#define ASS_INT 267
+#define ASS_CHR 268
+#define ASS_STR 269
+#define IFX 270
+#define ELSE 271
+#define OR 272
+#define AND 273
+#define NE 274
+#define EQ 275
+#define LE 276
+#define GE 277
+#define UMINUS 278
 
 
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 19 "c5.y"
+#line 21 "c5.y"
 {
-    int iValue;                 /* Integer value */
-    char sIndex;                /* Symbol table index */
-    nodeType *nPtr;             /* Node pointer */
+    int iValue;        /* Integer value */
+    char cValue;       /* Character value */
+    char* sValue;      /* String value */
+    /*char sIndex;       [> Symbol table index <]*/
+    Node *nPtr;    /* Node pointer */
+    char varName[13];  /* String value */
 }
 /* Line 1529 of yacc.c.  */
-#line 95 "y.tab.h"
+#line 104 "y.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

@@ -1,23 +1,90 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <assert.h>
 #include "calc3.h"
 #include "y.tab.h"
 
-// Label
+/* Label */
 static int lbl;
 
-int ex(nodeType *p) {
+/* Global variable count */
+int glbVarCnt = 0;             
+
+void updateVar(Node* left, Node* right) {
+    /*printf("Start updating...\n");*/
+    assert(left->nodeType == typeId);
+    VarNode* cpy = malloc(sizeof(VarNode));
+    VarNode* useless;
+
+    /* Name */
+    strncpy(cpy->name, left->id.name, strlen(left->id.name) + 1);
+    /* Data type */
+    cpy->dataType = right->dataType;
+    /* Scope */
+    cpy->scope = typeGlobal;  /* TODO: Assume all global now... */
+    /* Index */
+    cpy->idx = glbVarCnt++;
+
+    /*printf("Updating variable %s\n", var->name);*/
+    /*[>VarNode* varBlock = malloc(sizeof(VarNode));<]*/
+    /*[>varBlock->name = var->id.name;<]*/
+    /*[>strncpy(varBlock->name, var->id.name, strlen(var->id.name) + 1);<]*/
+    /*[>printf("Name copied\n");<]*/
+    /*left->dataType = right->dataType;*/
+    /*var->dataType = right->dataType;*/
+    /*printf("Datatype updated\n");*/
+    /*[>var->dataType = exp->dataType;<]*/
+    /*var->scope = typeGlobal;  */
+    /*printf("Scope updated\n");*/
+    /*var->idx = glbVarCnt++;*/
+    /*printf("Idx updated\n");*/
+    /*printf("Structure created\n");*/
+
+    /*printf("Start hash table operation...");*/
+    HASH_REPLACE_STR( sym, name, cpy, useless );
+    /*printf("Hash table updated for %s of type %d\n", cpy->name, cpy->dataType);*/
+}
+
+VarNode* getVar(Node* n) {
+    assert(n->nodeType == typeId);
+    VarNode* var = NULL;
+    /*printf("Looking for %s...\n", n->id.name);*/
+    HASH_FIND_STR( sym, n->id.name, var );
+    assert(var != NULL);
+    n->id = *var;  /* Replace node from table */ 
+    n->dataType = var->dataType;  /* Update data type */
+    return var;
+}
+
+
+int ex(Node *p) {
   int lblx, lbly, lbl1, lbl2;
 
   if (!p) return 0;
 
-  switch (p->type) {
+  switch (p->nodeType) {
       case typeCon:  /* Constants */
-          printf("\tpush\t%d\n", p->con.value);
+          switch (p->con.dataType) {
+              case typeInt:
+                  printf("\tpush\t%d\n", p->con.iVal);
+                  break;
+              case typeChr:
+                  printf("\tpush\t'%c'\n", p->con.cVal);
+                  break;
+              case typeStr:
+                  printf("\tpush\t\"%s\"\n", p->con.sVal);
+                  break;
+          }
           break;
 
       case typeId:  /* Variables */
-        /*printf("\tpush\t%c\n", p->id.i + 'a');*/
-        break;
+          /*printf("[c5c.c] Start typeID\n");*/
+          // TODO: where to fill this info?
+          //       Use the hash table!
+          printf("\tpush\tsb[%d]\n", getVar(p)->idx);
+          /*printf("[c5c.c] End typeID\n");*/
+          break;
 
       case typeOpr:  // Operators
 
@@ -67,17 +134,29 @@ int ex(nodeType *p) {
 
             case PRINT:
               // TODO: put* depends on the type... default to int just for now
-              //       dunno if the type is already encoded in the current struct
-              //       if not, needa modify the struct definition...
               //       Update: ok there's only int and var now, needa add char & string,
               //               working on that right now!
+              /*printf("[c5c.c] Start PRINT\n");*/
               ex(p->opr.op[0]);
-              printf("\tputi\n");
+              // FIXME
+              switch(p->opr.op[0]->dataType) {
+                  case typeInt:
+                      printf("\tputi\n");
+                      break;
+                  case typeChr:
+                      printf("\tputc\n");
+                      break;
+                  case typeStr:
+                      printf("\tputs\n");
+                      break;
+              }
+              /*printf("[c5c.c] End PRINT\n");*/
               break;
 
             case '=':  /* Assignment operator */
               ex(p->opr.op[1]);
-              /*printf("\tpop\t%c\n", p->opr.op[0]->id.i + 'a');*/
+              /* Update hash table */
+              updateVar(p->opr.op[0], p->opr.op[1]);
               break;
 
             case UMINUS:

@@ -1,4 +1,9 @@
 	push	7
-	geti
+	push	'y'
+	push	"Wat the fuck?"
+	push	sb[0]
 	puti
-	puti
+	push	sb[1]
+	putc
+	push	sb[2]
+	puts
