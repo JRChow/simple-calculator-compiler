@@ -59,10 +59,10 @@ stmt:
           ';'                             { $$ = opr(';', 2, NULL, NULL);     }
         | expr ';'                        { $$ = $1;                          }
         | PRINT expr ';'                  { $$ = opr(PRINT, 1, $2);           }
-	    | READ VARIABLE ';'               { /* $$ = opr(READ, 1, id($2)); */       }
+		/*| READ VARIABLE ';'               { [> $$ = opr(READ, 1, id($2)); <]       }*/
         | VARIABLE '=' expr ';'           { $$ = opr('=', 2, id($1), $3);     }
-        | VARIABLE '=' CHAR ';'           { $$ = opr('=', 2, id($1), con(&$3, typeChr)); }
-        | VARIABLE '=' STR ';'            { $$ = opr('=', 2, id($1), con($3, typeStr));     }
+        /*| VARIABLE '=' CHAR ';'           { $$ = opr('=', 2, id($1), con(&$3, typeChr)); }*/
+        /*| VARIABLE '=' STR ';'            { $$ = opr('=', 2, id($1), con($3, typeStr));     }*/
         | FOR '(' stmt stmt stmt ')' stmt { $$ = opr(FOR, 4, $3, $4, $5, $7); }
         | WHILE '(' expr ')' stmt         { $$ = opr(WHILE, 2, $3, $5);       }
         | IF '(' expr ')' stmt %prec IFX  { $$ = opr(IF, 2, $3, $5);          }
@@ -76,7 +76,9 @@ stmt_list:
         ;
 
 expr:
-          INTEGER               { $$ = con(&$1, typeInt);    }
+          INTEGER               { $$ = con(&$1, typeInt);   }
+        | CHAR                  { $$ = con(&$1, typeChr);   }
+        | STR                   { $$ = con($1, typeStr);    }
         | VARIABLE              { $$ = id($1);              }
         | '-' expr %prec UMINUS { $$ = opr(UMINUS, 1, $2);  }
         | expr '+' expr         { $$ = opr('+', 2, $1, $3); }

@@ -16,6 +16,8 @@ void yyerror(char *);
 "while"           return WHILE;
 "if"              return IF;
 "else"            return ELSE;
+"geti"|"getc"|"gets"            
+"puti"|"puti_"|"putc"|"putc_"|"puts"|"puts_"
 "print"           return PRINT;
 "read"		      return READ;
 "&&"		      return AND;
