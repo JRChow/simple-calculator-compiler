@@ -29,3 +29,7 @@ putc(c);
 puts("Enter string: ");
 gets(s);
 puts(s);
+
+puts("Enter another string: ");
+gets(s);
+puts(s);

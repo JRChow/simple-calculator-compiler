@@ -40,3 +40,8 @@
 	gets
 	push	sb[5]
 	puts
+	push	"Enter another string: "
+	puts
+	gets
+	push	sb[6]
+	puts
