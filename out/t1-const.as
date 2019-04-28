@@ -1,3 +1,3 @@
-	push	99
+	push	'c'
 	push	27
-	push	391118848
+	push	"hello, world!"
