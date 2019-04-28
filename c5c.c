@@ -21,6 +21,7 @@ void updateVar(Node* left, Node* right) {
     strncpy(cpy->name, left->id.name, strlen(left->id.name) + 1);
     /* Data type */
     cpy->dataType = right->dataType;
+    /*printf("[c5c.c] updateVar(): %s dataType updated to %d\n", cpy->name, cpy->dataType);*/
     /* Scope */
     cpy->scope = typeGlobal;  /* TODO: Assume all global now... */
     /* Index */
@@ -80,8 +81,6 @@ int ex(Node *p) {
 
       case typeId:  /* Variables */
           /*printf("[c5c.c] Start typeID\n");*/
-          // TODO: where to fill this info?
-          //       Use the hash table!
           printf("\tpush\tsb[%d]\n", getVar(p)->idx);
           /*printf("[c5c.c] End typeID\n");*/
           break;
@@ -133,12 +132,8 @@ int ex(Node *p) {
               break;
 
             case PRINT:
-              // TODO: put* depends on the type... default to int just for now
-              //       Update: ok there's only int and var now, needa add char & string,
-              //               working on that right now!
               /*printf("[c5c.c] Start PRINT\n");*/
               ex(p->opr.op[0]);
-              // FIXME
               switch(p->opr.op[0]->dataType) {
                   case typeInt:
                       printf("\tputi\n");
@@ -149,6 +144,8 @@ int ex(Node *p) {
                   case typeStr:
                       printf("\tputs\n");
                       break;
+                  default:
+                      printf("[c5c.c] wrong datatype %d in PRINT", p->opr.op[0]->dataType);
               }
               /*printf("[c5c.c] End PRINT\n");*/
               break;
@@ -160,13 +157,14 @@ int ex(Node *p) {
               break;
 
             case UMINUS:
-              /*ex(p->opr.op[0]);*/
-              /*printf("\tneg\n");*/
+              ex(p->opr.op[0]);
+              printf("\tneg\n");
               break;
 
             default:
-              /*ex(p->opr.op[0]);*/
-              /*ex(p->opr.op[1]);*/
+              p->dataType = typeInt;
+              ex(p->opr.op[0]);
+              ex(p->opr.op[1]);
 
               switch (p->opr.oper) {
                   case '+':   printf("\tadd\n"); break;
