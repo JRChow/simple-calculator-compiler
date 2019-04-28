@@ -29,9 +29,11 @@ VarNode* sym = NULL;  /* Hash table */
 
 %token <iValue> INTEGER
 %token <cValue> CHAR
-%token <sValue> STR
+%token <sValue> STR GET PUT
 %token <varName> VARIABLE
-%token FOR WHILE IF PRINT READ ASS_INT ASS_CHR ASS_STR
+%token FOR WHILE IF
+%token GETI GETC GETS
+%token PUTI PUTI_ PUTC PUTC_ PUTS PUTS_
 %nonassoc IFX
 %nonassoc ELSE
 
@@ -58,11 +60,22 @@ function:
 stmt:
           ';'                             { $$ = opr(';', 2, NULL, NULL);     }
         | expr ';'                        { $$ = $1;                          }
-        | PRINT expr ';'                  { $$ = opr(PRINT, 1, $2);           }
+        /*| PRINT expr ';'                  { $$ = opr(PRINT, 1, $2);           }*/
 		/*| READ VARIABLE ';'               { [> $$ = opr(READ, 1, id($2)); <]       }*/
+        | GETI '(' VARIABLE ')' ';'  { $$ = opr(GETI, 1, id($3)); }
+        | GETC '(' VARIABLE ')' ';'  { $$ = opr(GETC, 1, id($3)); }
+        | GETS '(' VARIABLE ')' ';'  { $$ = opr(GETS, 1, id($3)); }
+        | PUTI  '(' expr ')' ';'     { $$ = opr(PUTI,  1, $3); }
+        | PUTI_ '(' expr ')' ';'     { $$ = opr(PUTI_, 1, $3); }
+        | PUTC  '(' expr ')' ';'     { $$ = opr(PUTC,  1, $3); }
+        | PUTC_ '(' expr ')' ';'     { $$ = opr(PUTC_, 1, $3); }
+        | PUTS  '(' expr ')' ';'     { $$ = opr(PUTS,  1, $3); }
+        | PUTS_ '(' expr ')' ';'     { $$ = opr(PUTS_, 1, $3); }
         | VARIABLE '=' expr ';'           { $$ = opr('=', 2, id($1), $3);     }
         /*| VARIABLE '=' CHAR ';'           { $$ = opr('=', 2, id($1), con(&$3, typeChr)); }*/
         /*| VARIABLE '=' STR ';'            { $$ = opr('=', 2, id($1), con($3, typeStr));     }*/
+        /*| GET '(' VARIABLE ')' ';'            { $$ = opr(PUT, 2, $1, $3); }*/
+        /*| PUT '(' expr ')' ';'            {  }*/
         | FOR '(' stmt stmt stmt ')' stmt { $$ = opr(FOR, 4, $3, $4, $5, $7); }
         | WHILE '(' expr ')' stmt         { $$ = opr(WHILE, 2, $3, $5);       }
         | IF '(' expr ')' stmt %prec IFX  { $$ = opr(IF, 2, $3, $5);          }

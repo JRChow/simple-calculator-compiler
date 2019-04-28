@@ -8,20 +8,27 @@ void yyerror(char *);
 
 %%
 
-">="              return GE;
-"<="              return LE;
-"=="              return EQ;
-"!="              return NE;
-"for"		      return FOR;
-"while"           return WHILE;
-"if"              return IF;
-"else"            return ELSE;
-"geti"|"getc"|"gets"            
-"puti"|"puti_"|"putc"|"putc_"|"puts"|"puts_"
-"print"           return PRINT;
-"read"		      return READ;
-"&&"		      return AND;
-"||"		      return OR;
+">="     return GE;
+"<="     return LE;
+"=="     return EQ;
+"!="     return NE;
+"for"    return FOR;
+"while"  return WHILE;
+"if"     return IF;
+"else"   return ELSE;
+"&&"     return AND;
+"||"     return OR;
+
+"geti"   return GETI;
+"getc"   return GETC;
+"gets"   return GETS;
+
+"puti"   return PUTI;
+"puti_"  return PUTI_;
+"putc"   return PUTC;
+"putc_"  return PUTC_;
+"puts"   return PUTS;
+"puts_"  return PUTS_;
 
 [a-zA-Z][a-zA-Z0-9]*  { 
                         strncpy(yylval.varName, yytext, strlen(yytext) + 1);

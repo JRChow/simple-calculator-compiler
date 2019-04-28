@@ -125,30 +125,30 @@ int ex(Node *p) {
               /*}*/
               break;
 
-            case READ:  // TODO
-              printf("\tgeti\n");
-              /*printf("\tread\n");*/
-              /*printf("\tpop\t%c\n", p->opr.op[0]->id.i + 'a');*/
-              break;
+            /*case READ:  // TODO: write IO */
+              /*printf("\tgeti\n");*/
+              /*[>printf("\tread\n");<]*/
+              /*[>printf("\tpop\t%c\n", p->opr.op[0]->id.i + 'a');<]*/
+              /*break;*/
 
-            case PRINT:
-              /*printf("[c5c.c] Start PRINT\n");*/
-              ex(p->opr.op[0]);
-              switch(p->opr.op[0]->dataType) {
-                  case typeInt:
-                      printf("\tputi\n");
-                      break;
-                  case typeChr:
-                      printf("\tputc\n");
-                      break;
-                  case typeStr:
-                      printf("\tputs\n");
-                      break;
-                  default:
-                      printf("[c5c.c] wrong datatype %d in PRINT", p->opr.op[0]->dataType);
-              }
-              /*printf("[c5c.c] End PRINT\n");*/
-              break;
+            /*case PRINT:*/
+              /*[>printf("[c5c.c] Start PRINT\n");<]*/
+              /*ex(p->opr.op[0]);*/
+              /*switch(p->opr.op[0]->dataType) {*/
+                  /*case typeInt:*/
+                      /*printf("\tputi\n");*/
+                      /*break;*/
+                  /*case typeChr:*/
+                      /*printf("\tputc\n");*/
+                      /*break;*/
+                  /*case typeStr:*/
+                      /*printf("\tputs\n");*/
+                      /*break;*/
+                  /*default:*/
+                      /*printf("[c5c.c] wrong datatype %d in PRINT", p->opr.op[0]->dataType);*/
+              /*}*/
+              /*[>printf("[c5c.c] End PRINT\n");<]*/
+              /*break;*/
 
             case '=':  /* Assignment operator */
               ex(p->opr.op[1]);

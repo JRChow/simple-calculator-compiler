@@ -42,48 +42,60 @@
      INTEGER = 258,
      CHAR = 259,
      STR = 260,
-     VARIABLE = 261,
-     FOR = 262,
-     WHILE = 263,
-     IF = 264,
-     PRINT = 265,
-     READ = 266,
-     ASS_INT = 267,
-     ASS_CHR = 268,
-     ASS_STR = 269,
-     IFX = 270,
-     ELSE = 271,
-     OR = 272,
-     AND = 273,
-     NE = 274,
-     EQ = 275,
-     LE = 276,
-     GE = 277,
-     UMINUS = 278
+     GET = 261,
+     PUT = 262,
+     VARIABLE = 263,
+     FOR = 264,
+     WHILE = 265,
+     IF = 266,
+     GETI = 267,
+     GETC = 268,
+     GETS = 269,
+     PUTI = 270,
+     PUTI_ = 271,
+     PUTC = 272,
+     PUTC_ = 273,
+     PUTS = 274,
+     PUTS_ = 275,
+     IFX = 276,
+     ELSE = 277,
+     OR = 278,
+     AND = 279,
+     NE = 280,
+     EQ = 281,
+     LE = 282,
+     GE = 283,
+     UMINUS = 284
    };
 #endif
 /* Tokens.  */
 #define INTEGER 258
 #define CHAR 259
 #define STR 260
-#define VARIABLE 261
-#define FOR 262
-#define WHILE 263
-#define IF 264
-#define PRINT 265
-#define READ 266
-#define ASS_INT 267
-#define ASS_CHR 268
-#define ASS_STR 269
-#define IFX 270
-#define ELSE 271
-#define OR 272
-#define AND 273
-#define NE 274
-#define EQ 275
-#define LE 276
-#define GE 277
-#define UMINUS 278
+#define GET 261
+#define PUT 262
+#define VARIABLE 263
+#define FOR 264
+#define WHILE 265
+#define IF 266
+#define GETI 267
+#define GETC 268
+#define GETS 269
+#define PUTI 270
+#define PUTI_ 271
+#define PUTC 272
+#define PUTC_ 273
+#define PUTS 274
+#define PUTS_ 275
+#define IFX 276
+#define ELSE 277
+#define OR 278
+#define AND 279
+#define NE 280
+#define EQ 281
+#define LE 282
+#define GE 283
+#define UMINUS 284
 
 
 
@@ -100,7 +112,7 @@ typedef union YYSTYPE
     char varName[13];  /* String value */
 }
 /* Line 1529 of yacc.c.  */
-#line 104 "y.tab.h"
+#line 116 "y.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
