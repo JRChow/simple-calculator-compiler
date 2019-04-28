@@ -17,3 +17,15 @@ puti_(1 + 2 * 3);
 putc_('F');
 puts("UCK!");
 
+// Testing `get`
+puts("Enter int and it'll be * 10: ");
+geti(i);
+puti(i * 10);
+
+puts("Enter char: ");
+getc(c);
+putc(c);
+
+puts("Enter string: ");
+gets(s);
+puts(s);

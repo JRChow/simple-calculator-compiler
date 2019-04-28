@@ -93,17 +93,17 @@ int ex(Node *p) {
         switch (p->opr.oper) {
             case GETI:
                 printf("\tgeti\n");
-                updateVar(p, typeInt);
+                updateVar(p->opr.op[0], typeInt);
                 break;
 
             case GETC:
                 printf("\tgetc\n");
-                updateVar(p, typeChr);
+                updateVar(p->opr.op[0], typeChr);
                 break;
 
             case GETS:
                 printf("\tgets\n");
-                updateVar(p, typeStr);
+                updateVar(p->opr.op[0], typeStr);
                 break;
 
             case PUTI:

@@ -23,3 +23,20 @@
 	putc_
 	push	"UCK!"
 	puts
+	push	"Enter int and it'll be * 10: "
+	puts
+	geti
+	push	sb[3]
+	push	10
+	mul
+	puti
+	push	"Enter char: "
+	puts
+	getc
+	push	sb[4]
+	putc
+	push	"Enter string: "
+	puts
+	gets
+	push	sb[5]
+	puts
