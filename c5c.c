@@ -88,7 +88,7 @@ int ex(Node *p) {
       case typeOpr:  // Operators
 
         switch (p->opr.oper) {
-            case FOR:
+            case FOR:  // TODO
               /*ex(p->opr.op[0]);*/
               /*printf("L%03d:\n", lblx = lbl++);*/
               /*ex(p->opr.op[1]);*/
@@ -99,7 +99,7 @@ int ex(Node *p) {
               /*printf("L%03d:\n",       lbly);*/
               break;
 
-            case WHILE:
+            case WHILE:  // TODO
               /*printf("L%03d:\n", lbl1 = lbl++);*/
               /*ex(p->opr.op[0]);*/
               /*printf("\tjz\tL%03d\n", lbl2 = lbl++);*/
@@ -108,7 +108,7 @@ int ex(Node *p) {
               /*printf("L%03d:\n",       lbl2);*/
               break;
 
-            case IF:
+            case IF:  // TODO
               /*ex(p->opr.op[0]);  // Handle condition*/
 
               /*if (p->opr.nops > 2) {  [> if-else <]*/
@@ -125,7 +125,7 @@ int ex(Node *p) {
               /*}*/
               break;
 
-            case READ:
+            case READ:  // TODO
               printf("\tgeti\n");
               /*printf("\tread\n");*/
               /*printf("\tpop\t%c\n", p->opr.op[0]->id.i + 'a');*/

@@ -17,6 +17,7 @@ Note that there's an abstraction that compiles and executes together. `./run.sh 
 - [x] Add the constraint that the maximum variable name length is 12 characters
 - [ ] Need to distinguish between global and local variables in the grammar
 - [x] Variable modification after definition
+- [ ] Finish remaining non-functional language features (e.g., loops)
 
 ## General FIXME
 
