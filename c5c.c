@@ -47,7 +47,7 @@ void updateVar(Node* var, dataEnum dataType) {
 
     /*printf("Start hash table operation...");*/
     HASH_REPLACE_STR( sym, name, cpy, useless );
-    /*printf("Hash table updated for %s of type %d\n", cpy->name, cpy->dataType);*/
+    printf("Hash table updated for %s : %d to idx %d\n", cpy->name, cpy->dataType, cpy->idx);
 }
 
 VarNode* getVar(Node* n) {
@@ -148,15 +148,17 @@ int ex(Node *p) {
               break;
 
             case WHILE:  // TODO
-              /*printf("L%03d:\n", lbl1 = lbl++);*/
-              /*ex(p->opr.op[0]);*/
-              /*printf("\tjz\tL%03d\n", lbl2 = lbl++);*/
-              /*ex(p->opr.op[1]);*/
-              /*printf("\tjmp\tL%03d\n", lbl1);*/
-              /*printf("L%03d:\n",       lbl2);*/
+              printf("L%03d:\n", lbl1 = lbl++);
+              ex(p->opr.op[0]);  /* Execute condition */
+              /* If condition fails, jump to the end */
+              printf("\tj0\tL%03d\n", lbl2 = lbl++);
+              ex(p->opr.op[1]);  /* Execute body */
+              /* Go back to loop start to check condition */
+              printf("\tjmp\tL%03d\n", lbl1);
+              printf("L%03d:\n",       lbl2);  /* The end */
               break;
 
-            case IF:  // TODO
+            case IF:
               ex(p->opr.op[0]);  /* Handle condition */
 
               if (p->opr.nops > 2) {  /* if-else type */

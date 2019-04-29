@@ -18,10 +18,11 @@ Note that there's an abstraction that compiles and executes together. `./run.sh 
 - [ ] Need to distinguish between global and local variables in the grammar
 - [x] Variable modification after definition
 - [ ] Finish remaining non-functional language features (e.g., `for`, `while`, `if`)
+- [ ] Deal with case insensitivity
 
 ## General FIXME
 
 - [x] Execution order is problematic... See 'test/var.sc'
 - [x] The current method doesn't work because updates happen only locally... Probably still need something like a hash table for storing variable info
 - [ ] `test/gets.sc` has a bug: after reading the first char, the second string read is skipped. Probably a problem with NAS not flushing its input buffer?
-
+- [ ] `test/while.sc` is not working...
