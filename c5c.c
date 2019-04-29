@@ -157,46 +157,25 @@ int ex(Node *p) {
               break;
 
             case IF:  // TODO
-              /*ex(p->opr.op[0]);  // Handle condition*/
+              ex(p->opr.op[0]);  /* Handle condition */
 
-              /*if (p->opr.nops > 2) {  [> if-else <]*/
-                /*printf("\tj0\tL%03d\n", lbl1 = lbl++);*/
-                /*ex(p->opr.op[1]);  // "then" branch*/
-                /*printf("\tjmp\tL%03d\n", lbl2 = lbl++);*/
-                /*printf("L%03d:\n",       lbl1);  // "else" branch*/
-                /*ex(p->opr.op[2]);*/
-                /*printf("L%03d:\n", lbl2);  // End of statement*/
-              /*} else {  [> if <]*/
-                /*printf("\tjz\tL%03d\n", lbl1 = lbl++);*/
-                /*ex(p->opr.op[1]);*/
-                /*printf("L%03d:\n", lbl1);*/
-              /*}*/
+              if (p->opr.nops > 2) {  /* if-else type */
+                  /* If condition fails, jump to "else" */
+                  printf("\tj0\tL%03d\n", lbl1 = lbl++);
+                  ex(p->opr.op[1]);  /* Execute "then" branch */
+                  /* Jump to the end of statement */
+                  printf("\tjmp\tL%03d\n", lbl2 = lbl++);
+                  /* Start of the "else" branch */
+                  printf("L%03d:\n",       lbl1);
+                  ex(p->opr.op[2]);  /* Execute "else" branch */
+                  printf("L%03d:\n", lbl2);  /* End of statement */
+              } else {                /* if type */
+                  /* If condition fails, jump to the end */
+                  printf("\tj0\tL%03d\n", lbl1 = lbl++);
+                  ex(p->opr.op[1]);
+                  printf("L%03d:\n", lbl1);  /* The end */
+              }
               break;
-
-            /*case READ:  // TODO: write IO */
-              /*printf("\tgeti\n");*/
-              /*[>printf("\tread\n");<]*/
-              /*[>printf("\tpop\t%c\n", p->opr.op[0]->id.i + 'a');<]*/
-              /*break;*/
-
-            /*case PRINT:*/
-              /*[>printf("[c5c.c] Start PRINT\n");<]*/
-              /*ex(p->opr.op[0]);*/
-              /*switch(p->opr.op[0]->dataType) {*/
-                  /*case typeInt:*/
-                      /*printf("\tputi\n");*/
-                      /*break;*/
-                  /*case typeChr:*/
-                      /*printf("\tputc\n");*/
-                      /*break;*/
-                  /*case typeStr:*/
-                      /*printf("\tputs\n");*/
-                      /*break;*/
-                  /*default:*/
-                      /*printf("[c5c.c] wrong datatype %d in PRINT", p->opr.op[0]->dataType);*/
-              /*}*/
-              /*[>printf("[c5c.c] End PRINT\n");<]*/
-              /*break;*/
 
             case '=':  /* Assignment operator */
               ex(p->opr.op[1]);
