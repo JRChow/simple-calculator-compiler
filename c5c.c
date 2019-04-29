@@ -11,24 +11,45 @@ static int lbl;
 /* Global variable count */
 int glbVarCnt = 0;             
 
-/* Copy variable node into hash table for add/update,
- * and set datatypes for both the node and the copy. */
-void updateVar(Node* var, dataEnum dataType) {
-    /*printf("Start updating...\n");*/
-    assert(var->nodeType == typeId);
-    VarNode* cpy = malloc(sizeof(VarNode));
-    VarNode* useless;
+/* Update variable info in hash table */
+void updateVar(Node* node) {
+    assert(node->nodeType = typeId);
+    VarNode* varNode = &node->id;
+    varNode->dataType = node->dataType;
 
-    /* Name */
-    strncpy(cpy->name, var->id.name, strlen(var->id.name) + 1);
-    /* Data type */
-    var->dataType = dataType;
-    cpy->dataType = dataType;
+    /*printf("Start updating...\n");*/
+    VarNode* varEntry;
+    /*VarNode* useless;*/
+
     /*printf("[c5c.c] updateVar(): %s dataType updated to %d\n", cpy->name, cpy->dataType);*/
-    /* Scope */
-    cpy->scope = typeGlobal;  /* TODO: Assume all global now... */
-    /* Index */
-    cpy->idx = glbVarCnt++;
+    /*printf("Looking for {%s} in table...\n", varNode->name);*/
+    HASH_FIND_STR( sym, varNode->name, varEntry );
+    if (varEntry == NULL) {  /* Declaration */
+        /*printf("New declaration\n");*/
+        /* Use the node as a hash table entry */
+        /*varEntry = varNode;*/
+        /* Create new hash table entry
+         * (Necessary to prevent segfault) */
+        varEntry = malloc(sizeof(VarNode));  /* Copy of var node */
+        /* Name */
+        strncpy(varEntry->name, varNode->name, strlen(varNode->name) + 1);
+        /* Data type */
+        varEntry->dataType = varNode->dataType;
+        /* Scope */
+        varEntry->scope = typeGlobal;  /* TODO: Assume all global for now... */
+        /* Index */
+        varEntry->idx = glbVarCnt++;
+        /*varEntry->scope = typeGlobal;*/
+        HASH_ADD_STR( sym, name, varEntry );
+    } else {  /* Update */
+        /*printf("Update existing entry\n");*/
+        printf("\tpop\tsb[%d]\n", varEntry->idx);
+    }
+    /*printf("Done updating\n");*/
+    /* Data type */
+    /*varEntry->dataType = varNode->dataType;*/
+    /*HASH_REPLACE_STR( sym, name, varEntry, useless );*/
+    /*cpy->idx = glbVarCnt++;*/
 
     /*printf("Updating variable %s\n", var->name);*/
     /*[>VarNode* varBlock = malloc(sizeof(VarNode));<]*/
@@ -46,19 +67,17 @@ void updateVar(Node* var, dataEnum dataType) {
     /*printf("Structure created\n");*/
 
     /*printf("Start hash table operation...");*/
-    HASH_REPLACE_STR( sym, name, cpy, useless );
     /*printf("Hash table updated for %s : %d to idx %d\n", cpy->name, cpy->dataType, cpy->idx);*/
 }
 
-VarNode* getVar(Node* n) {
-    assert(n->nodeType == typeId);
-    VarNode* var = NULL;
+/* Get hash table entry */
+VarNode* getVar(Node* node) {
+    assert(node->nodeType == typeId);
+    VarNode* varEntry = NULL;
     /*printf("Looking for %s...\n", n->id.name);*/
-    HASH_FIND_STR( sym, n->id.name, var );
-    assert(var != NULL);
-    n->id = *var;  /* Replace node from table */ 
-    n->dataType = var->dataType;  /* Update data type */
-    return var;
+    HASH_FIND_STR( sym, node->id.name, varEntry );
+    assert(varEntry != NULL);
+    return varEntry;
 }
 
 
@@ -84,7 +103,10 @@ int ex(Node *p) {
 
       case typeId:  /* Variables */
           /*printf("[c5c.c] Start typeID\n");*/
-          printf("\tpush\tsb[%d]\n", getVar(p)->idx);
+          assert(p->nodeType == typeId);
+          p->id = *getVar(p);
+          p->dataType = p->id.dataType;
+          printf("\tpush\tsb[%d]\n", p->id.idx);
           /*printf("[c5c.c] End typeID\n");*/
           break;
 
@@ -93,17 +115,20 @@ int ex(Node *p) {
         switch (p->opr.oper) {
             case GETI:
                 printf("\tgeti\n");
-                updateVar(p->opr.op[0], typeInt);
+                p->opr.op[0]->dataType = typeInt;
+                updateVar(p->opr.op[0]);
                 break;
 
             case GETC:
                 printf("\tgetc\n");
-                updateVar(p->opr.op[0], typeChr);
+                p->opr.op[0]->dataType = typeChr;
+                updateVar(p->opr.op[0]);
                 break;
 
             case GETS:
                 printf("\tgets\n");
-                updateVar(p->opr.op[0], typeStr);
+                p->opr.op[0]->dataType = typeStr;
+                updateVar(p->opr.op[0]);
                 break;
 
             case PUTI:
@@ -180,9 +205,11 @@ int ex(Node *p) {
               break;
 
             case '=':  /* Assignment operator */
+              /*printf("[c5c.c] Match '='\n");*/
+              p->opr.op[0]->dataType = p->opr.op[1]->dataType;
               ex(p->opr.op[1]);
               /* Update hash table */
-              updateVar(p->opr.op[0], p->opr.op[1]->dataType);
+              updateVar(p->opr.op[0]);
               break;
 
             case UMINUS:

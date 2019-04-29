@@ -2,13 +2,16 @@
 	push	sb[0]
 	push	1
 	add
-	push	sb[1]
+	pop	sb[0]
+	push	sb[0]
 	push	1
 	add
-	push	sb[2]
+	pop	sb[0]
+	push	sb[0]
 	push	1
 	add
-	push	sb[3]
+	pop	sb[0]
+	push	sb[0]
 	puti
 	push	"Should be 3"
 	puts
