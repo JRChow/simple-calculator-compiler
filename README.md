@@ -26,3 +26,4 @@ Note that there's an abstraction that compiles and executes together. `./run.sh 
 - [x] The current method doesn't work because updates happen only locally... Probably still need something like a hash table for storing variable info
 - [ ] `test/gets.sc` has a bug: after reading the first char, the second string read is skipped. Probably a problem with NAS not flushing its input buffer?
 - [ ] `test/while.sc` is not working...
+- [ ] Fuck me, `test/abs.sc` is also not fucking working, what the fuck!

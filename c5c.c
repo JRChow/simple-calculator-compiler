@@ -47,7 +47,7 @@ void updateVar(Node* var, dataEnum dataType) {
 
     /*printf("Start hash table operation...");*/
     HASH_REPLACE_STR( sym, name, cpy, useless );
-    printf("Hash table updated for %s : %d to idx %d\n", cpy->name, cpy->dataType, cpy->idx);
+    /*printf("Hash table updated for %s : %d to idx %d\n", cpy->name, cpy->dataType, cpy->idx);*/
 }
 
 VarNode* getVar(Node* n) {
