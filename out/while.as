@@ -11,5 +11,6 @@ L000:
 	push	sb[0]
 	push	1
 	sub
+	pop	sb[0]
 	jmp	L000
 L001:

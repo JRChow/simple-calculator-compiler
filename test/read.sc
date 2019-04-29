@@ -1,2 +1,0 @@
-read x;
-print x;

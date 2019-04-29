@@ -5,6 +5,9 @@
 	complt
 	j0	L000
 	push	6
+	pop	sb[0]
 L000:
-	push	sb[2]
+	push	sb[0]
 	puti
+	push	"Should be 7"
+	puts

@@ -4,4 +4,5 @@ while (i < 3) {
     x = x - 1;
     i = i + 1;
 }
-puti(x);  // Should see 7
+puti(x);
+puts("Should see 7");

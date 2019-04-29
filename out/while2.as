@@ -1,7 +1,5 @@
 	push	0
-Hash table updated for i : 0 to idx 0
 	push	10
-Hash table updated for x : 0 to idx 1
 L000:
 	push	sb[0]
 	push	3
@@ -10,12 +8,14 @@ L000:
 	push	sb[1]
 	push	1
 	sub
-Hash table updated for x : 0 to idx 2
+	pop	sb[1]
 	push	sb[0]
 	push	1
 	add
-Hash table updated for i : 0 to idx 3
+	pop	sb[0]
 	jmp	L000
 L001:
-	push	sb[2]
+	push	sb[1]
 	puti
+	push	"Should see 7"
+	puts
