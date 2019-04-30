@@ -11,6 +11,24 @@ static int lbl;
 /* Global variable count */
 int glbVarCnt = 0;             
 
+/* Stack operations: increment or decrement */
+typedef enum { opInc, opDec } spOpEnum;
+
+/* Move SP (stack pointer) */
+void mvSP(spOpEnum op) {
+    printf("\tpush sp\n");
+    printf("\tpush 1\n");
+    switch(op) {
+        case opInc:
+            printf("\tadd\n");
+            break;
+        case opDec:
+            printf("\tsub\n");
+            break;
+    }
+    printf("\tpop sp\n");
+}
+
 /* Update variable info in hash table */
 void updateVar(Node* node) {
     assert(node->nodeType = typeId);
@@ -41,9 +59,12 @@ void updateVar(Node* node) {
         varEntry->idx = glbVarCnt++;
         /*varEntry->scope = typeGlobal;*/
         HASH_ADD_STR( sym, name, varEntry );
-    } else {  /* Update */
-        /*printf("Update existing entry\n");*/
         printf("\tpop\tsb[%d]\n", varEntry->idx);
+    } else {  /* Update */
+        // printf("Update existing entry\n");
+        printf("\tpop\tsb[%d]\n", varEntry->idx);
+        /* Note: Need to decrement SP! */
+        mvSP(opDec);
     }
     /*printf("Done updating\n");*/
     /* Data type */
@@ -113,21 +134,28 @@ int ex(Node *p) {
       case typeOpr:  // Operators
 
         switch (p->opr.oper) {
-            case GETI:
-                printf("\tgeti\n");
+            case GETI:  /* GET involves variable assignment */
+                /* Step 1: Update varNode datatype */
                 p->opr.op[0]->dataType = typeInt;
+                /* Step 2 (Note): Need to increment SP! */
+                mvSP(opInc);
+                /* Step 3: Push value */
+                printf("\tgeti\n");
+                /* Step 4: Call updateVar to update hash table using the node */
                 updateVar(p->opr.op[0]);
                 break;
 
             case GETC:
-                printf("\tgetc\n");
                 p->opr.op[0]->dataType = typeChr;
+                mvSP(opInc);
+                printf("\tgetc\n");
                 updateVar(p->opr.op[0]);
                 break;
 
             case GETS:
-                printf("\tgets\n");
                 p->opr.op[0]->dataType = typeStr;
+                mvSP(opInc);
+                printf("\tgets\n");
                 updateVar(p->opr.op[0]);
                 break;
 
@@ -208,11 +236,15 @@ int ex(Node *p) {
               }
               break;
 
-            case '=':  /* Assignment operator */
+            case '=':  /* FIXME: Assignment operator */
               /*printf("[c5c.c] Match '='\n");*/
+              /* Step 1: Update varNode datatype */
               p->opr.op[0]->dataType = p->opr.op[1]->dataType;
+              /* Step 2 (Note): Need to increment SP! */
+              mvSP(opInc);
+              /* Step 3: Push value (RHS) */
               ex(p->opr.op[1]);
-              /* Update hash table */
+              /* Step 4: Call updateVar to update hash table using the node */
               updateVar(p->opr.op[0]);
               break;
 

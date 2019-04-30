@@ -1,6 +1,11 @@
 	push	"Enter an int: "
 	puts
+	push sp
+	push 1
+	add
+	pop sp
 	geti
+	pop	sb[0]
 	push	sb[0]
 	puti_
 	push	sb[0]
