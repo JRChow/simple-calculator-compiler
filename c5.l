@@ -30,6 +30,10 @@ void yyerror(char *);
 "puts"   return PUTS;
 "puts_"  return PUTS_;
 
+"func"   return FUNC;
+"return" return RET;
+"main:"  return MAIN;
+
 [a-zA-Z][a-zA-Z0-9]*  { 
                         strncpy(yylval.varName, yytext, strlen(yytext) + 1);
                         /*yylval.strVal = yytext;*/

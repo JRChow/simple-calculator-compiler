@@ -34,6 +34,7 @@ VarNode* sym = NULL;  /* Hash table */
 %token FOR WHILE IF
 %token GETI GETC GETS
 %token PUTI PUTI_ PUTC PUTC_ PUTS PUTS_
+%token FUNC RET MAIN
 %nonassoc IFX
 %nonassoc ELSE
 
