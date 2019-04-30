@@ -6,13 +6,23 @@
 	puts
 	push	"0..5"
 	puts
+	push sp
+	push 1
+	add
+	pop sp
 	push	3
+	pop	sb[0]
 L000:
 	push	sb[0]
 	push	6
 	complt
 	j0	L001
+	push sp
+	push 1
+	add
+	pop sp
 	push	0
+	pop	sb[1]
 L002:
 	push	sb[1]
 	push	sb[0]
@@ -20,15 +30,31 @@ L002:
 	j0	L003
 	push	sb[1]
 	puti
+	push sp
+	push 1
+	add
+	pop sp
 	push	sb[1]
 	push	1
 	add
 	pop	sb[1]
+	push sp
+	push 1
+	sub
+	pop sp
 	jmp	L002
 L003:
+	push sp
+	push 1
+	add
+	pop sp
 	push	sb[0]
 	push	1
 	add
 	pop	sb[0]
+	push sp
+	push 1
+	sub
+	pop sp
 	jmp	L000
 L001:
