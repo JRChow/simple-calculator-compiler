@@ -1,13 +1,20 @@
-func abs(x, y) {
-    puts(y);
+func abs(x) {
     neg = -1;
-    if (x < g) {
-        x = x * neg;
+    if (x < z) {
+        x = mul(x, -1);
     }
     return x;
 }
-// main:
-g = 0;
-puts("Enter an int: ");
-geti(z);
-puti(abs(z, "test"));
+
+func mul(x, y) {
+    return x * y;
+}
+
+MAIN:
+x = -1;
+z = 0;
+puti(abs(x));
+puts("should see 1");
+puti(x);
+puts("should see -1");
+

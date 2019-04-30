@@ -33,6 +33,7 @@ Note that there's an abstraction that compiles and executes together. `./run.sh 
 - [ ] Use `func xx() { ... }` and `xx();` to differentiate function definition and call
 - [ ] Function definitions may appear anywhere.
 - [ ] Is there a need to distinguish between function and variable names?
+- [ ] Probably use two tables, one for global and one for local?
 
 ## General FIXME
 
