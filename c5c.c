@@ -162,17 +162,21 @@ int ex(Node *p) {
                 break;
 
             case FOR:  // TODO
-              /*ex(p->opr.op[0]);*/
-              /*printf("L%03d:\n", lblx = lbl++);*/
-              /*ex(p->opr.op[1]);*/
-              /*printf("\tjz\tL%03d\n", lbly = lbl++);*/
-              /*ex(p->opr.op[3]);*/
-              /*ex(p->opr.op[2]);*/
-              /*printf("\tjmp\tL%03d\n", lblx);*/
-              /*printf("L%03d:\n",       lbly);*/
+                ex(p->opr.op[0]);  /* Execute initialization */
+                /* Label for condition check */
+                printf("L%03d:\n", lblx = lbl++);
+                ex(p->opr.op[1]);  /* Execute condition */
+                /* If condition fails, jump to the end */
+                printf("\tj0\tL%03d\n", lbly = lbl++);
+                /* If condition holds, execute body */
+                ex(p->opr.op[3]);
+                ex(p->opr.op[2]);  /* Execute increment */
+                /* Check condition */
+                printf("\tjmp\tL%03d\n", lblx);
+                printf("L%03d:\n",       lbly);  /* The end */
               break;
 
-            case WHILE:  // TODO
+            case WHILE:
               printf("L%03d:\n", lbl1 = lbl++);
               ex(p->opr.op[0]);  /* Execute condition */
               /* If condition fails, jump to the end */

@@ -1,3 +1,3 @@
-for (i = 3; i < 6; i = i + 1;)
-  for (j = 0; j <= i; j = j + 1;) 
-    print j;
+puts("Gonna print 0...9");
+for (i = 0; i < 10; i = i+1;)
+    puti(i);

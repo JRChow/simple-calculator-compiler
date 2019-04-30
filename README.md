@@ -27,3 +27,4 @@ Note that there's an abstraction that compiles and executes together. `./run.sh 
 - [ ] `test/gets.sc` has a bug: after reading the first char, the second string read is skipped. Probably a problem with NAS not flushing its input buffer?
 - [x] `test/while.sc` is not working...
 - [x] Fuck me, `test/abs.sc` is also not fucking working, what the fuck!
+- [x] Double nested for loop is not working correctly
