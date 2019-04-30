@@ -59,15 +59,16 @@
      PUTS_ = 275,
      FUNC = 276,
      RET = 277,
-     IFX = 278,
-     ELSE = 279,
-     OR = 280,
-     AND = 281,
-     NE = 282,
-     EQ = 283,
-     LE = 284,
-     GE = 285,
-     UMINUS = 286
+     CALL = 278,
+     IFX = 279,
+     ELSE = 280,
+     OR = 281,
+     AND = 282,
+     NE = 283,
+     EQ = 284,
+     LE = 285,
+     GE = 286,
+     UMINUS = 287
    };
 #endif
 /* Tokens.  */
@@ -91,15 +92,16 @@
 #define PUTS_ 275
 #define FUNC 276
 #define RET 277
-#define IFX 278
-#define ELSE 279
-#define OR 280
-#define AND 281
-#define NE 282
-#define EQ 283
-#define LE 284
-#define GE 285
-#define UMINUS 286
+#define CALL 278
+#define IFX 279
+#define ELSE 280
+#define OR 281
+#define AND 282
+#define NE 283
+#define EQ 284
+#define LE 285
+#define GE 286
+#define UMINUS 287
 
 
 
@@ -116,7 +118,7 @@ typedef union YYSTYPE
     char varName[13];  /* String value */
 }
 /* Line 1529 of yacc.c.  */
-#line 120 "y.tab.h"
+#line 122 "y.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

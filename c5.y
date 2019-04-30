@@ -34,7 +34,7 @@ VarNode* sym = NULL;  /* Hash table */
 %token FOR WHILE IF
 %token GETI GETC GETS
 %token PUTI PUTI_ PUTC PUTC_ PUTS PUTS_
-%token FUNC RET /* MAIN */
+%token FUNC RET CALL /* TODO: MAIN */
 %nonassoc IFX
 %nonassoc ELSE
 
@@ -45,7 +45,7 @@ VarNode* sym = NULL;  /* Hash table */
 %left '*' '/' '%'
 %nonassoc UMINUS
 
-%type <nPtr> stmt expr stmt_list
+%type <nPtr> stmt expr stmt_list var_list
 
 %%
 
@@ -76,8 +76,8 @@ stmt:
         | IF '(' expr ')' stmt %prec IFX  { $$ = opr(IF, 2, $3, $5);          }
         | IF '(' expr ')' stmt ELSE stmt  { $$ = opr(IF, 3, $3, $5, $7);      }
         | '{' stmt_list '}'               { $$ = $2;                          }
-        | FUNC VARIABLE '(' var_list ')' stmt  { /* TODO: Function declaration */ }
-        | RET expr ';'  { /* FIXME: Return statement! */ }
+        | FUNC VARIABLE '(' var_list ')' stmt  { $$ = opr(FUNC, 3, id($2), $4, $6); }
+        | RET expr ';'  { $$ = opr(RET, 1, $2); }
         ;
 
 stmt_list:
@@ -86,8 +86,8 @@ stmt_list:
         ;
 
 var_list:
-        var_list VARIABLE  { /* TODO */  }
-        | /* NULL */
+        var_list VARIABLE  { $$ = opr(',', 2, $1, id($2));  }
+        | /* NULL */       { $$ = NULL;                     }
         ;
 
 expr:
@@ -110,7 +110,7 @@ expr:
         | expr AND expr		    { $$ = opr(AND, 2, $1, $3); }
         | expr OR expr		    { $$ = opr(OR, 2, $1, $3);  }
         | '(' expr ')'          { $$ = $2;                  }
-        | VARIABLE '(' var_list ')'  { /* FIXME: Function call */ }
+        | VARIABLE '(' var_list ')'  { $$ = opr(CALL, 2, id($1), $3); }
         ;
 
 %%

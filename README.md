@@ -32,6 +32,7 @@ Note that there's an abstraction that compiles and executes together. `./run.sh 
 - [ ] Deal with variable naming case insensitivity
 - [ ] Use `func xx() { ... }` and `xx();` to differentiate function definition and call
 - [ ] Function definitions may appear anywhere.
+- [ ] Is there a need to distinguish between function and variable names?
 
 ## General FIXME
 
