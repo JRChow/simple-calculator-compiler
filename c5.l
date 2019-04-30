@@ -32,10 +32,10 @@ void yyerror(char *);
 
 "func"   return FUNC;
 "return" return RET;
+"main:"  return MAIN;
 
 [a-zA-Z][a-zA-Z0-9]*  { 
                         strncpy(yylval.varName, yytext, strlen(yytext) + 1);
-                        /*yylval.strVal = yytext;*/
                         /*printf("[c5.l] Matched variable: dest = %s, src = %s\n", yylval.varName, yytext);*/
                         return VARIABLE;
                       }
@@ -50,11 +50,12 @@ void yyerror(char *);
                   return INTEGER;
               }
 
-\'.*\'        {
-                  /* TODO: deal with empty char */
-                  /* Just cast char into int to get ASCII value */
-                  yylval.cValue = yytext[1];
-                  /*yylval.iValue = (int) yytext[1];*/
+\'.?\'        {
+                  if (strlen(yytext) == 3) {  /* Non-empty char */
+                      yylval.cValue = yytext[1];
+                  } else {  /* Empty char */
+                      yylval.cValue = '\0';
+                  }
                   return CHAR;
               }
 
@@ -73,14 +74,14 @@ void yyerror(char *);
                   return STR;
               }
 
-[-()<>=+*/;{}.%]  return *yytext;
+[-()<>=+*/;{}.%,]  return *yytext;
 
 
 \/\/.*\n	    ;    /* Skip comments */
 
 [ \t\n]+        ;    /* Ignore whitespace */
 
-.               yyerror("Unknown character");
+.               printf("Unknown character [%c]\n", *yytext);
 
 %%
 

@@ -6,18 +6,17 @@ typedef enum { typeLocal, typeGlobal } scopeEnum;
 
 /* Constants */
 typedef struct {
-    dataEnum dataType; /* Type of data (can be null) */
+    dataEnum dataType; /* Type of data */
     union {
-        int iVal;    /* Int value    */
-        char cVal;   /* Char value   */
-        char* sVal;  /* String value */
+        int iVal;      /* Int value    */
+        char cVal;     /* Char value   */
+        char* sVal;    /* String value */
     };
 } ConstNode;
 
 /* Variables */
 typedef struct {
     char name[13];      /* Key: name of variable */
-    dataEnum dataType;
     scopeEnum scope;
     int idx;            /* Subscript to pointer */
     UT_hash_handle hh;  /* Make this struct hashable */
@@ -32,7 +31,6 @@ typedef struct {
 
 typedef struct nodeTypeTag {
   nodeEnum nodeType; /* Type of node */
-  dataEnum dataType; /* Type of data (can be null) */
 
   /* Union must be last entry in nodeType          */
   /* because operNodeType may dynamically increase */
@@ -43,16 +41,4 @@ typedef struct nodeTypeTag {
   };
 } Node;
 
-/* ---------------------------------------------- */
-
-/* Hash table unit */
-//typedef struct {
-    //char name[13];  [> Key (maximum 12 characters) <]
-    //dataEnum dataType;
-    //scopeEnum scope;
-    //int idx;  [> Subscript to pointer <]
-    //UT_hash_handle hh;  [> Make this struct hashable <]
-//} varInfo;
-
-//extern int sym[26];
 extern VarNode* sym;  /* Hash table */

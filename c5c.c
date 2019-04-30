@@ -2,14 +2,20 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
+#include <stdbool.h>
 #include "calc3.h"
 #include "y.tab.h"
 
 /* Label */
-static int lbl;
-
+static int label = 0;
 /* Global variable count */
-int glbVarCnt = 0;             
+static int glbVarCnt = 0;             
+/* Local variable count; TODO: remember to reset to 0! */
+static int locVarCnt = 0;             
+/* Parameter count; TODO: remember to reset to 0! */
+static int paramCnt = 0;             
+/* Indicating that we're parsing inside function definition */
+static bool isInFunc = false;
 
 /* Stack operations: increment or decrement */
 typedef enum { opInc, opDec } spOpEnum;
@@ -33,62 +39,35 @@ void mvSP(spOpEnum op) {
 void updateVar(Node* node) {
     assert(node->nodeType = typeId);
     VarNode* varNode = &node->id;
-    varNode->dataType = node->dataType;
 
     /*printf("Start updating...\n");*/
     VarNode* varEntry;
-    /*VarNode* useless;*/
 
     /*printf("[c5c.c] updateVar(): %s dataType updated to %d\n", cpy->name, cpy->dataType);*/
+    
     /*printf("Looking for {%s} in table...\n", varNode->name);*/
     HASH_FIND_STR( sym, varNode->name, varEntry );
+
     if (varEntry == NULL) {  /* Declaration */
-        /*printf("New declaration\n");*/
-        /* Use the node as a hash table entry */
-        /*varEntry = varNode;*/
         /* Create new hash table entry
          * (Necessary to prevent segfault) */
         varEntry = malloc(sizeof(VarNode));  /* Copy of var node */
         /* Name */
         strncpy(varEntry->name, varNode->name, strlen(varNode->name) + 1);
-        /* Data type */
-        varEntry->dataType = varNode->dataType;
-        /* Scope */
-        varEntry->scope = typeGlobal;  /* TODO: Assume all global for now... */
-        /* Index */
-        varEntry->idx = glbVarCnt++;
-        /*varEntry->scope = typeGlobal;*/
+        /* Scope & Index */
+        if (isInFunc) {
+            varEntry->scope = typeLocal;
+            varEntry->idx = locVarCnt++;
+        } else {
+            varEntry->scope = typeGlobal;
+            varEntry->idx = glbVarCnt++;
+        }
         HASH_ADD_STR( sym, name, varEntry );
         printf("\tpop\tsb[%d]\n", varEntry->idx);
     } else {  /* Update */
-        // printf("Update existing entry\n");
         printf("\tpop\tsb[%d]\n", varEntry->idx);
-        /* Note: Need to decrement SP! */
-        mvSP(opDec);
+        mvSP(opDec);  /* Note: Need to decrement SP! */
     }
-    /*printf("Done updating\n");*/
-    /* Data type */
-    /*varEntry->dataType = varNode->dataType;*/
-    /*HASH_REPLACE_STR( sym, name, varEntry, useless );*/
-    /*cpy->idx = glbVarCnt++;*/
-
-    /*printf("Updating variable %s\n", var->name);*/
-    /*[>VarNode* varBlock = malloc(sizeof(VarNode));<]*/
-    /*[>varBlock->name = var->id.name;<]*/
-    /*[>strncpy(varBlock->name, var->id.name, strlen(var->id.name) + 1);<]*/
-    /*[>printf("Name copied\n");<]*/
-    /*var->dataType = right->dataType;*/
-    /*var->dataType = right->dataType;*/
-    /*printf("Datatype updated\n");*/
-    /*[>var->dataType = exp->dataType;<]*/
-    /*var->scope = typeGlobal;  */
-    /*printf("Scope updated\n");*/
-    /*var->idx = glbVarCnt++;*/
-    /*printf("Idx updated\n");*/
-    /*printf("Structure created\n");*/
-
-    /*printf("Start hash table operation...");*/
-    /*printf("Hash table updated for %s : %d to idx %d\n", cpy->name, cpy->dataType, cpy->idx);*/
 }
 
 /* Get hash table entry */
@@ -101,9 +80,29 @@ VarNode* getVar(Node* node) {
     return varEntry;
 }
 
+/* TODO: Update function name */
+void updateFunc(Node* node) {
+    printf("[c5c.c] Updating Func!\n");
+}
+
+/* TODO: Add function parameter to hash table with correct index */
+void addParam(VarNode* varNode) {
+    /* Add parameter to hash table */
+    printf("[c5c.c] Updating parameters!\n");
+    VarNode* varEntry = malloc(sizeof(VarNode));
+    /* Name */
+    strncpy(varEntry->name, varNode->name, strlen(varNode->name) + 1);
+    /* Datatype: unknown */
+    /* Scope: local (use fp to address) */
+    varEntry->scope = typeLocal;
+    /* Index: Important! Index should decrease from -4 */
+    varEntry->idx = (-4) - locVarCnt++;
+    HASH_ADD_STR( sym, name, varEntry );
+}
+
 
 int ex(Node *p) {
-  int lblx, lbly, lbl1, lbl2;
+  int labelx, labely, label1, label2;
 
   if (!p) return 0;
 
@@ -126,7 +125,6 @@ int ex(Node *p) {
           /*printf("[c5c.c] Start typeID\n");*/
           assert(p->nodeType == typeId);
           p->id = *getVar(p);
-          p->dataType = p->id.dataType;
           printf("\tpush\tsb[%d]\n", p->id.idx);
           /*printf("[c5c.c] End typeID\n");*/
           break;
@@ -135,25 +133,21 @@ int ex(Node *p) {
 
         switch (p->opr.oper) {
             case GETI:  /* GET involves variable assignment */
-                /* Step 1: Update varNode datatype */
-                p->opr.op[0]->dataType = typeInt;
-                /* Step 2 (Note): Need to increment SP! */
+                /* Step 1 (Note): Need to increment SP! */
                 mvSP(opInc);
-                /* Step 3: Push value */
+                /* Step 2: Push value */
                 printf("\tgeti\n");
-                /* Step 4: Call updateVar to update hash table using the node */
+                /* Step 3: Call updateVar */
                 updateVar(p->opr.op[0]);
                 break;
 
             case GETC:
-                p->opr.op[0]->dataType = typeChr;
                 mvSP(opInc);
                 printf("\tgetc\n");
                 updateVar(p->opr.op[0]);
                 break;
 
             case GETS:
-                p->opr.op[0]->dataType = typeStr;
                 mvSP(opInc);
                 printf("\tgets\n");
                 updateVar(p->opr.op[0]);
@@ -192,27 +186,27 @@ int ex(Node *p) {
             case FOR:
                 ex(p->opr.op[0]);  /* Execute initialization */
                 /* Label for condition check */
-                printf("L%03d:\n", lblx = lbl++);
+                printf("L%03d:\n", labelx = label++);
                 ex(p->opr.op[1]);  /* Execute condition */
                 /* If condition fails, jump to the end */
-                printf("\tj0\tL%03d\n", lbly = lbl++);
+                printf("\tj0\tL%03d\n", labely = label++);
                 /* If condition holds, execute body */
                 ex(p->opr.op[3]);
                 ex(p->opr.op[2]);  /* Execute increment */
                 /* Check condition */
-                printf("\tjmp\tL%03d\n", lblx);
-                printf("L%03d:\n",       lbly);  /* The end */
+                printf("\tjmp\tL%03d\n", labelx);
+                printf("L%03d:\n",       labely);  /* The end */
               break;
 
             case WHILE:
-              printf("L%03d:\n", lbl1 = lbl++);
+              printf("L%03d:\n", label1 = label++);
               ex(p->opr.op[0]);  /* Execute condition */
               /* If condition fails, jump to the end */
-              printf("\tj0\tL%03d\n", lbl2 = lbl++);
+              printf("\tj0\tL%03d\n", label2 = label++);
               ex(p->opr.op[1]);  /* Execute body */
               /* Go back to loop start to check condition */
-              printf("\tjmp\tL%03d\n", lbl1);
-              printf("L%03d:\n",       lbl2);  /* The end */
+              printf("\tjmp\tL%03d\n", label1);
+              printf("L%03d:\n",       label2);  /* The end */
               break;
 
             case IF:
@@ -220,31 +214,28 @@ int ex(Node *p) {
 
               if (p->opr.nops > 2) {  /* if-else type */
                   /* If condition fails, jump to "else" */
-                  printf("\tj0\tL%03d\n", lbl1 = lbl++);
+                  printf("\tj0\tL%03d\n", label1 = label++);
                   ex(p->opr.op[1]);  /* Execute "then" branch */
                   /* Jump to the end of statement */
-                  printf("\tjmp\tL%03d\n", lbl2 = lbl++);
+                  printf("\tjmp\tL%03d\n", label2 = label++);
                   /* Start of the "else" branch */
-                  printf("L%03d:\n",       lbl1);
+                  printf("L%03d:\n",       label1);
                   ex(p->opr.op[2]);  /* Execute "else" branch */
-                  printf("L%03d:\n", lbl2);  /* End of statement */
+                  printf("L%03d:\n", label2);  /* End of statement */
               } else {                /* if type */
                   /* If condition fails, jump to the end */
-                  printf("\tj0\tL%03d\n", lbl1 = lbl++);
+                  printf("\tj0\tL%03d\n", label1 = label++);
                   ex(p->opr.op[1]);
-                  printf("L%03d:\n", lbl1);  /* The end */
+                  printf("L%03d:\n", label1);  /* The end */
               }
               break;
 
             case '=':  /* Assignment operator */
-              /*printf("[c5c.c] Match '='\n");*/
-              /* Step 1: Update varNode datatype */
-              p->opr.op[0]->dataType = p->opr.op[1]->dataType;
-              /* Step 2 (Note): Need to increment SP! */
+              /* Step 1 (Note): Need to increment SP! */
               mvSP(opInc);
-              /* Step 3: Push value (RHS) */
+              /* Step 2: Push value (RHS) */
               ex(p->opr.op[1]);
-              /* Step 4: Call updateVar to update hash table using the node */
+              /* Step 3: Call updateVar to update hash table using the node */
               updateVar(p->opr.op[0]);
               break;
 
@@ -253,24 +244,39 @@ int ex(Node *p) {
               printf("\tneg\n");
               break;
             
-            case FUNC:  /* TODO */
+            /* 0:VARIABLE; 1:var_list, 2:stmt */
+            case FUNC:  /* TODO: Function declaration */
               printf("[c5c.c] FUNC case\n");
+              isInFunc = true;
+              /*ex(p->opr.op[1]);  [> Deal with parameters <]*/
+              /*ex(p->opr.op[2]);  [> Execute body <]*/
+              isInFunc = false;
+              /* TODO: Deal with var_list */
+              /* TODO: Need a way to set up the label */
               break;
 
-            case RET:  /* TODO */
+            /* 0:expr */
+            case RET:  /* TODO: Return statement */
               printf("[c5c.c] RET case\n");
               break;
 
-            case ',':  /* TODO */
+            /* 0:var_list; 1:VARIABLE */
+            case ',':  /* TODO: Parameter list. */
+              /* Parse from right to left! */
               printf("[c5c.c] var_list case\n");
+              assert(p->opr.op[1]->nodeType == typeId);
+              addParam(&p->opr.op[1]->id);
+              /*ex(p->opr.op[0]);*/
+              paramCnt = 0;  /* Reset */
               break;
 
-            case CALL:  /* TODO */
+            /* 0:VARIABLE 1:var_list */
+            case CALL:  /* TODO: Function call */
               printf("[c5c.c] CALL case\n");
+              /* TODO: Need a way to name->label... */
               break;
 
             default:
-              p->dataType = typeInt;
               ex(p->opr.op[0]);
               ex(p->opr.op[1]);
 

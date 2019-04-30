@@ -1,10 +1,13 @@
-func abs(x) {
-    if (x < 0) {
-        x = -x;
+func abs(x, y) {
+    puts(y);
+    neg = -1;
+    if (x < g) {
+        x = x * neg;
     }
     return x;
 }
-// TODO: main:
+// main:
+g = 0;
 puts("Enter an int: ");
-geti(y);
-puti(abs(y));
+geti(z);
+puti(abs(z, "test"));

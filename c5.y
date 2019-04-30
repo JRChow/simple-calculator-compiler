@@ -4,7 +4,6 @@
 #include <stdarg.h>
 #include "calc3.h"
 
-/* Prototypes */
 Node* opr(int oper, int nops, ...);
 Node* id(char* name);
 Node* con(void* value, dataEnum type);
@@ -22,7 +21,6 @@ VarNode* sym = NULL;  /* Hash table */
     int iValue;        /* Integer value */
     char cValue;       /* Character value */
     char* sValue;      /* String value */
-    /*char sIndex;       [> Symbol table index <]*/
     Node *nPtr;        /* Node pointer */
     char varName[13];  /* String value */
 };
@@ -34,7 +32,7 @@ VarNode* sym = NULL;  /* Hash table */
 %token FOR WHILE IF
 %token GETI GETC GETS
 %token PUTI PUTI_ PUTC PUTC_ PUTS PUTS_
-%token FUNC RET CALL /* TODO: MAIN */
+%token FUNC RET CALL MAIN
 %nonassoc IFX
 %nonassoc ELSE
 
@@ -45,12 +43,12 @@ VarNode* sym = NULL;  /* Hash table */
 %left '*' '/' '%'
 %nonassoc UMINUS
 
-%type <nPtr> stmt expr stmt_list var_list
+%type <nPtr> stmt expr stmt_list var_list expr_list
 
 %%
 
 program:
-        function                { exit(0); }
+        function                { /* exit(0); */ /* Commented for a second pass */ }
         ;
 
 function:
@@ -61,21 +59,22 @@ function:
 stmt:
           ';'                             { $$ = opr(';', 2, NULL, NULL);     }
         | expr ';'                        { $$ = $1;                          }
-        | GETI '(' VARIABLE ')' ';'  { $$ = opr(GETI, 1, id($3)); }
-        | GETC '(' VARIABLE ')' ';'  { $$ = opr(GETC, 1, id($3)); }
-        | GETS '(' VARIABLE ')' ';'  { $$ = opr(GETS, 1, id($3)); }
-        | PUTI  '(' expr ')' ';'     { $$ = opr(PUTI,  1, $3); }
-        | PUTI_ '(' expr ')' ';'     { $$ = opr(PUTI_, 1, $3); }
-        | PUTC  '(' expr ')' ';'     { $$ = opr(PUTC,  1, $3); }
-        | PUTC_ '(' expr ')' ';'     { $$ = opr(PUTC_, 1, $3); }
-        | PUTS  '(' expr ')' ';'     { $$ = opr(PUTS,  1, $3); }
-        | PUTS_ '(' expr ')' ';'     { $$ = opr(PUTS_, 1, $3); }
+        | GETI '(' VARIABLE ')' ';'       { $$ = opr(GETI, 1, id($3));        }
+        | GETC '(' VARIABLE ')' ';'       { $$ = opr(GETC, 1, id($3));        }
+        | GETS '(' VARIABLE ')' ';'       { $$ = opr(GETS, 1, id($3));        }
+        | PUTI  '(' expr ')' ';'          { $$ = opr(PUTI,  1, $3);           }
+        | PUTI_ '(' expr ')' ';'          { $$ = opr(PUTI_, 1, $3);           }
+        | PUTC  '(' expr ')' ';'          { $$ = opr(PUTC,  1, $3);           }
+        | PUTC_ '(' expr ')' ';'          { $$ = opr(PUTC_, 1, $3);           }
+        | PUTS  '(' expr ')' ';'          { $$ = opr(PUTS,  1, $3);           }
+        | PUTS_ '(' expr ')' ';'          { $$ = opr(PUTS_, 1, $3);           }
         | VARIABLE '=' expr ';'           { $$ = opr('=', 2, id($1), $3);     }
         | FOR '(' stmt stmt stmt ')' stmt { $$ = opr(FOR, 4, $3, $4, $5, $7); }
         | WHILE '(' expr ')' stmt         { $$ = opr(WHILE, 2, $3, $5);       }
         | IF '(' expr ')' stmt %prec IFX  { $$ = opr(IF, 2, $3, $5);          }
         | IF '(' expr ')' stmt ELSE stmt  { $$ = opr(IF, 3, $3, $5, $7);      }
         | '{' stmt_list '}'               { $$ = $2;                          }
+        | FUNC VARIABLE '(' ')' stmt           { $$ = opr(FUNC, 2, id($2), $5); /* NEW */ }
         | FUNC VARIABLE '(' var_list ')' stmt  { $$ = opr(FUNC, 3, id($2), $4, $6); /* NEW */ }
         | RET expr ';'  { $$ = opr(RET, 1, $2); /* NEW */ }
         ;
@@ -86,9 +85,14 @@ stmt_list:
         ;
 
 var_list:
-        var_list VARIABLE  { $$ = opr(',', 2, $1, id($2)); /* NEW */ }
-        | /* NULL */       { $$ = NULL; /* TODO: maybe can delete */                    }
+        var_list ',' VARIABLE  { $$ = opr(',', 2, $1, id($3)); /* NEW */ }
+        | VARIABLE             { $$ = id($1); }
         ;
+
+expr_list:
+         expr
+         | expr_list ',' expr
+         ;
 
 expr:
           INTEGER               { $$ = con(&$1, typeInt);   }
@@ -110,7 +114,8 @@ expr:
         | expr AND expr		    { $$ = opr(AND, 2, $1, $3); }
         | expr OR expr		    { $$ = opr(OR, 2, $1, $3);  }
         | '(' expr ')'          { $$ = $2;                  }
-        | VARIABLE '(' var_list ')'  { $$ = opr(CALL, 2, id($1), $3); /* NEW */}
+        | VARIABLE '(' ')'            { $$ = opr(CALL, 1, id($1)); /* NEW */}
+        | VARIABLE '(' expr_list ')'  { $$ = opr(CALL, 2, id($1), $3); /* NEW */}
         ;
 
 %%
@@ -128,9 +133,7 @@ Node* con(void* value, dataEnum dataType) {
 
     /* Copy information */
     p->nodeType = typeCon;
-    p->dataType = dataType;
     p->con.dataType = dataType;
-    // TODO:
     switch (dataType) {
         case typeInt:
             p->con.iVal = *((int*) value);
@@ -142,7 +145,6 @@ Node* con(void* value, dataEnum dataType) {
             p->con.sVal = (char*) value;
             break;
     }
-    /*p->con.value = value;*/
 
     /*printf("Making con of type [%d]\n", dataType);*/
 
@@ -158,10 +160,11 @@ Node* id(char* name) {
     if ((p = malloc(nodeSize)) == NULL)
         yyerror("out of memory");
 
-    /* Copy information */
+    /* Set type */
     p->nodeType = typeId;
+    /* Set name */
     strncpy(p->id.name, name, strlen(name) + 1);
-    /*printf("{strncpy} dest = %s, src = %s\n", p->id.name, name);*/
+
     /*printf("[c5.y] created ID: %s\n", name);*/
 
     return p;
