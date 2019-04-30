@@ -23,7 +23,7 @@ VarNode* sym = NULL;  /* Hash table */
     char cValue;       /* Character value */
     char* sValue;      /* String value */
     /*char sIndex;       [> Symbol table index <]*/
-    Node *nPtr;    /* Node pointer */
+    Node *nPtr;        /* Node pointer */
     char varName[13];  /* String value */
 };
 
@@ -34,7 +34,7 @@ VarNode* sym = NULL;  /* Hash table */
 %token FOR WHILE IF
 %token GETI GETC GETS
 %token PUTI PUTI_ PUTC PUTC_ PUTS PUTS_
-%token FUNC RET MAIN
+%token FUNC RET /* MAIN */
 %nonassoc IFX
 %nonassoc ELSE
 
@@ -61,8 +61,6 @@ function:
 stmt:
           ';'                             { $$ = opr(';', 2, NULL, NULL);     }
         | expr ';'                        { $$ = $1;                          }
-        /*| PRINT expr ';'                  { $$ = opr(PRINT, 1, $2);           }*/
-		/*| READ VARIABLE ';'               { [> $$ = opr(READ, 1, id($2)); <]       }*/
         | GETI '(' VARIABLE ')' ';'  { $$ = opr(GETI, 1, id($3)); }
         | GETC '(' VARIABLE ')' ';'  { $$ = opr(GETC, 1, id($3)); }
         | GETS '(' VARIABLE ')' ';'  { $$ = opr(GETS, 1, id($3)); }
@@ -73,20 +71,23 @@ stmt:
         | PUTS  '(' expr ')' ';'     { $$ = opr(PUTS,  1, $3); }
         | PUTS_ '(' expr ')' ';'     { $$ = opr(PUTS_, 1, $3); }
         | VARIABLE '=' expr ';'           { $$ = opr('=', 2, id($1), $3);     }
-        /*| VARIABLE '=' CHAR ';'           { $$ = opr('=', 2, id($1), con(&$3, typeChr)); }*/
-        /*| VARIABLE '=' STR ';'            { $$ = opr('=', 2, id($1), con($3, typeStr));     }*/
-        /*| GET '(' VARIABLE ')' ';'            { $$ = opr(PUT, 2, $1, $3); }*/
-        /*| PUT '(' expr ')' ';'            {  }*/
         | FOR '(' stmt stmt stmt ')' stmt { $$ = opr(FOR, 4, $3, $4, $5, $7); }
         | WHILE '(' expr ')' stmt         { $$ = opr(WHILE, 2, $3, $5);       }
         | IF '(' expr ')' stmt %prec IFX  { $$ = opr(IF, 2, $3, $5);          }
         | IF '(' expr ')' stmt ELSE stmt  { $$ = opr(IF, 3, $3, $5, $7);      }
         | '{' stmt_list '}'               { $$ = $2;                          }
+        | FUNC VARIABLE '(' var_list ')' stmt  { /* TODO: Function declaration */ }
+        | RET expr ';'  { /* FIXME: Return statement! */ }
         ;
 
 stmt_list:
           stmt                  { $$ = $1;                  }
         | stmt_list stmt        { $$ = opr(';', 2, $1, $2); }
+        ;
+
+var_list:
+        var_list VARIABLE  { /* TODO */  }
+        | /* NULL */
         ;
 
 expr:
@@ -109,6 +110,7 @@ expr:
         | expr AND expr		    { $$ = opr(AND, 2, $1, $3); }
         | expr OR expr		    { $$ = opr(OR, 2, $1, $3);  }
         | '(' expr ')'          { $$ = $2;                  }
+        | VARIABLE '(' var_list ')'  { /* FIXME: Function call */ }
         ;
 
 %%

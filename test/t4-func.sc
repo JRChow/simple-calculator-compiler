@@ -4,7 +4,7 @@ func abs(x) {
     }
     return x;
 }
-main:
+// TODO: main:
 puts("Enter an int: ");
 geti(y);
 puti(abs(y));
