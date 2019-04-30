@@ -17,14 +17,14 @@ Note that there's an abstraction that compiles and executes together. `./run.sh 
 - [x] Add the constraint that the maximum variable name length is 12 characters
 - [ ] Need to distinguish between global and local variables in the grammar
 - [x] Variable modification after definition
-- [ ] Finish remaining non-functional language features (e.g., `for`, `while`, `if`)
+- [x] Finish remaining non-functional language features (e.g., `for`, `while`, `if`)
 - [ ] Deal with variable naming case insensitivity
 
 ## General FIXME
 
 - [x] Execution order is problematic... See 'test/var.sc'
 - [x] The current method doesn't work because updates happen only locally... Probably still need something like a hash table for storing variable info
-- [ ] `test/gets.sc` has a bug: after reading the first char, the second string read is skipped. Probably a problem with NAS not flushing its input buffer?
+- [ ] `test/gets.sc` has a bug: after reading the first char, the second string read is skipped. Probably a problem with NAS not flushing its input buffer? Uh better not fix it yet, just leave it be right now
 - [x] `test/while.sc` is not working...
 - [x] Fuck me, `test/abs.sc` is also not fucking working, what the fuck!
 - [x] Double nested for loop is not working correctly

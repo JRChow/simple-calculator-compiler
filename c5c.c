@@ -189,7 +189,7 @@ int ex(Node *p) {
                 printf("\tputs_\n");
                 break;
 
-            case FOR:  // TODO
+            case FOR:
                 ex(p->opr.op[0]);  /* Execute initialization */
                 /* Label for condition check */
                 printf("L%03d:\n", lblx = lbl++);
