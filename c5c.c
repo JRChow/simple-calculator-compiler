@@ -236,7 +236,7 @@ int ex(Node *p) {
               }
               break;
 
-            case '=':  /* FIXME: Assignment operator */
+            case '=':  /* Assignment operator */
               /*printf("[c5c.c] Match '='\n");*/
               /* Step 1: Update varNode datatype */
               p->opr.op[0]->dataType = p->opr.op[1]->dataType;
@@ -251,6 +251,22 @@ int ex(Node *p) {
             case UMINUS:
               ex(p->opr.op[0]);
               printf("\tneg\n");
+              break;
+            
+            case FUNC:  /* TODO */
+              printf("[c5c.c] FUNC case\n");
+              break;
+
+            case RET:  /* TODO */
+              printf("[c5c.c] RET case\n");
+              break;
+
+            case ',':  /* TODO */
+              printf("[c5c.c] var_list case\n");
+              break;
+
+            case CALL:  /* TODO */
+              printf("[c5c.c] CALL case\n");
               break;
 
             default:

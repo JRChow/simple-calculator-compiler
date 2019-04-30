@@ -76,8 +76,8 @@ stmt:
         | IF '(' expr ')' stmt %prec IFX  { $$ = opr(IF, 2, $3, $5);          }
         | IF '(' expr ')' stmt ELSE stmt  { $$ = opr(IF, 3, $3, $5, $7);      }
         | '{' stmt_list '}'               { $$ = $2;                          }
-        | FUNC VARIABLE '(' var_list ')' stmt  { $$ = opr(FUNC, 3, id($2), $4, $6); }
-        | RET expr ';'  { $$ = opr(RET, 1, $2); }
+        | FUNC VARIABLE '(' var_list ')' stmt  { $$ = opr(FUNC, 3, id($2), $4, $6); /* NEW */ }
+        | RET expr ';'  { $$ = opr(RET, 1, $2); /* NEW */ }
         ;
 
 stmt_list:
@@ -86,8 +86,8 @@ stmt_list:
         ;
 
 var_list:
-        var_list VARIABLE  { $$ = opr(',', 2, $1, id($2));  }
-        | /* NULL */       { $$ = NULL;                     }
+        var_list VARIABLE  { $$ = opr(',', 2, $1, id($2)); /* NEW */ }
+        | /* NULL */       { $$ = NULL; /* TODO: maybe can delete */                    }
         ;
 
 expr:
@@ -110,7 +110,7 @@ expr:
         | expr AND expr		    { $$ = opr(AND, 2, $1, $3); }
         | expr OR expr		    { $$ = opr(OR, 2, $1, $3);  }
         | '(' expr ')'          { $$ = $2;                  }
-        | VARIABLE '(' var_list ')'  { $$ = opr(CALL, 2, id($1), $3); }
+        | VARIABLE '(' var_list ')'  { $$ = opr(CALL, 2, id($1), $3); /* NEW */}
         ;
 
 %%
