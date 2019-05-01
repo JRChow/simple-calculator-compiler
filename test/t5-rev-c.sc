@@ -5,7 +5,6 @@ func reverseInput() {
         reverseInput();
         putc_(x);
     }
-    return 0;
 }
 Main:
 puts("Please enter a line:");

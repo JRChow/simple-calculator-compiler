@@ -1682,7 +1682,7 @@ yyreduce:
 
   case 29:
 #line 95 "c5.y"
-    { (yyval.nPtr) = id((yyvsp[(1) - (1)].varName)); }
+    { (yyval.nPtr) = id((yyvsp[(1) - (1)].varName));                     }
     break;
 
   case 30:
@@ -1697,107 +1697,107 @@ yyreduce:
 
   case 32:
 #line 104 "c5.y"
-    { (yyval.nPtr) = con(&(yyvsp[(1) - (1)].iValue), typeInt);   }
+    { (yyval.nPtr) = con(&(yyvsp[(1) - (1)].iValue), typeInt);        }
     break;
 
   case 33:
 #line 105 "c5.y"
-    { (yyval.nPtr) = con(&(yyvsp[(1) - (1)].cValue), typeChr);   }
+    { (yyval.nPtr) = con(&(yyvsp[(1) - (1)].cValue), typeChr);        }
     break;
 
   case 34:
 #line 106 "c5.y"
-    { (yyval.nPtr) = con((yyvsp[(1) - (1)].sValue), typeStr);    }
+    { (yyval.nPtr) = con((yyvsp[(1) - (1)].sValue), typeStr);         }
     break;
 
   case 35:
 #line 107 "c5.y"
-    { (yyval.nPtr) = id((yyvsp[(1) - (1)].varName));              }
+    { (yyval.nPtr) = id((yyvsp[(1) - (1)].varName));                   }
     break;
 
   case 36:
 #line 108 "c5.y"
-    { (yyval.nPtr) = opr(UMINUS, 1, (yyvsp[(2) - (2)].nPtr));  }
+    { (yyval.nPtr) = opr(UMINUS, 1, (yyvsp[(2) - (2)].nPtr));       }
     break;
 
   case 37:
 #line 109 "c5.y"
-    { (yyval.nPtr) = opr('+', 2, (yyvsp[(1) - (3)].nPtr), (yyvsp[(3) - (3)].nPtr)); }
+    { (yyval.nPtr) = opr('+', 2, (yyvsp[(1) - (3)].nPtr), (yyvsp[(3) - (3)].nPtr));      }
     break;
 
   case 38:
 #line 110 "c5.y"
-    { (yyval.nPtr) = opr('-', 2, (yyvsp[(1) - (3)].nPtr), (yyvsp[(3) - (3)].nPtr)); }
+    { (yyval.nPtr) = opr('-', 2, (yyvsp[(1) - (3)].nPtr), (yyvsp[(3) - (3)].nPtr));      }
     break;
 
   case 39:
 #line 111 "c5.y"
-    { (yyval.nPtr) = opr('*', 2, (yyvsp[(1) - (3)].nPtr), (yyvsp[(3) - (3)].nPtr)); }
+    { (yyval.nPtr) = opr('*', 2, (yyvsp[(1) - (3)].nPtr), (yyvsp[(3) - (3)].nPtr));      }
     break;
 
   case 40:
 #line 112 "c5.y"
-    { (yyval.nPtr) = opr('%', 2, (yyvsp[(1) - (3)].nPtr), (yyvsp[(3) - (3)].nPtr)); }
+    { (yyval.nPtr) = opr('%', 2, (yyvsp[(1) - (3)].nPtr), (yyvsp[(3) - (3)].nPtr));      }
     break;
 
   case 41:
 #line 113 "c5.y"
-    { (yyval.nPtr) = opr('/', 2, (yyvsp[(1) - (3)].nPtr), (yyvsp[(3) - (3)].nPtr)); }
+    { (yyval.nPtr) = opr('/', 2, (yyvsp[(1) - (3)].nPtr), (yyvsp[(3) - (3)].nPtr));      }
     break;
 
   case 42:
 #line 114 "c5.y"
-    { (yyval.nPtr) = opr('<', 2, (yyvsp[(1) - (3)].nPtr), (yyvsp[(3) - (3)].nPtr)); }
+    { (yyval.nPtr) = opr('<', 2, (yyvsp[(1) - (3)].nPtr), (yyvsp[(3) - (3)].nPtr));      }
     break;
 
   case 43:
 #line 115 "c5.y"
-    { (yyval.nPtr) = opr('>', 2, (yyvsp[(1) - (3)].nPtr), (yyvsp[(3) - (3)].nPtr)); }
+    { (yyval.nPtr) = opr('>', 2, (yyvsp[(1) - (3)].nPtr), (yyvsp[(3) - (3)].nPtr));      }
     break;
 
   case 44:
 #line 116 "c5.y"
-    { (yyval.nPtr) = opr(GE, 2, (yyvsp[(1) - (3)].nPtr), (yyvsp[(3) - (3)].nPtr));  }
+    { (yyval.nPtr) = opr(GE, 2, (yyvsp[(1) - (3)].nPtr), (yyvsp[(3) - (3)].nPtr));       }
     break;
 
   case 45:
 #line 117 "c5.y"
-    { (yyval.nPtr) = opr(LE, 2, (yyvsp[(1) - (3)].nPtr), (yyvsp[(3) - (3)].nPtr));  }
+    { (yyval.nPtr) = opr(LE, 2, (yyvsp[(1) - (3)].nPtr), (yyvsp[(3) - (3)].nPtr));       }
     break;
 
   case 46:
 #line 118 "c5.y"
-    { (yyval.nPtr) = opr(NE, 2, (yyvsp[(1) - (3)].nPtr), (yyvsp[(3) - (3)].nPtr));  }
+    { (yyval.nPtr) = opr(NE, 2, (yyvsp[(1) - (3)].nPtr), (yyvsp[(3) - (3)].nPtr));       }
     break;
 
   case 47:
 #line 119 "c5.y"
-    { (yyval.nPtr) = opr(EQ, 2, (yyvsp[(1) - (3)].nPtr), (yyvsp[(3) - (3)].nPtr));  }
+    { (yyval.nPtr) = opr(EQ, 2, (yyvsp[(1) - (3)].nPtr), (yyvsp[(3) - (3)].nPtr));       }
     break;
 
   case 48:
 #line 120 "c5.y"
-    { (yyval.nPtr) = opr(AND, 2, (yyvsp[(1) - (3)].nPtr), (yyvsp[(3) - (3)].nPtr)); }
+    { (yyval.nPtr) = opr(AND, 2, (yyvsp[(1) - (3)].nPtr), (yyvsp[(3) - (3)].nPtr));      }
     break;
 
   case 49:
 #line 121 "c5.y"
-    { (yyval.nPtr) = opr(OR, 2, (yyvsp[(1) - (3)].nPtr), (yyvsp[(3) - (3)].nPtr));  }
+    { (yyval.nPtr) = opr(OR, 2, (yyvsp[(1) - (3)].nPtr), (yyvsp[(3) - (3)].nPtr));       }
     break;
 
   case 50:
 #line 122 "c5.y"
-    { (yyval.nPtr) = (yyvsp[(2) - (3)].nPtr);                  }
+    { (yyval.nPtr) = (yyvsp[(2) - (3)].nPtr);                       }
     break;
 
   case 51:
 #line 123 "c5.y"
-    { (yyval.nPtr) = opr(CALL, 1, id((yyvsp[(1) - (3)].varName))); /* NEW */}
+    { (yyval.nPtr) = opr(CALL, 1, id((yyvsp[(1) - (3)].varName)));     }
     break;
 
   case 52:
 #line 124 "c5.y"
-    { (yyval.nPtr) = opr(CALL, 2, id((yyvsp[(1) - (4)].varName)), (yyvsp[(3) - (4)].nPtr)); /* NEW */}
+    { (yyval.nPtr) = opr(CALL, 2, id((yyvsp[(1) - (4)].varName)), (yyvsp[(3) - (4)].nPtr)); }
     break;
 
 

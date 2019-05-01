@@ -18,8 +18,6 @@ L000:
 	push	fp[0]
 	putc_
 L001:
-	push	0
-	ret
 	ret
 L999:
 	push	"Please enter a line:"

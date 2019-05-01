@@ -4,6 +4,7 @@ func max(x, y) {
     }
     return y;
 }
+
 Main:
 puts("Enter 2 numbers: ");
 geti(x);
