@@ -16,8 +16,10 @@ L000:
 	j0	L001
 	call	L000, 0
 	push	fp[0]
-	putc
+	putc_
 L001:
+	push	0
+	ret
 L999:
 	push	"Please enter a line:"
 	puts

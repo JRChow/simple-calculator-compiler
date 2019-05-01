@@ -3,8 +3,9 @@ func reverseInput() {
     // Not newline
     if (x != 10) {
         reverseInput();
-        putc(x);
+        putc_(x);
     }
+    return 0;
 }
 Main:
 puts("Please enter a line:");
