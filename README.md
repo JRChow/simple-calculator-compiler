@@ -64,7 +64,7 @@ The result would be 11.
 - [x] The current method doesn't work because updates happen only locally... Probably still need something like a hash table for storing variable info
 - [ ] `test/gets.sc` has a bug: after reading the first char, the second string read is skipped. Probably a problem with NAS not flushing its input buffer? Uh better not fix it yet, just leave it be right now
 - [x] `test/while.sc` is not working...
-- [x] F\\k me, `test/abs.sc` is also not f\\king working, what the f\\k!
+- [x] \\\\ me, `test/abs.sc` is also not \\\\\\\ working, what the \\\\!
 - [x] Double nested for loop is not working correctly
 
 ## Future Work

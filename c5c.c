@@ -10,11 +10,11 @@
 static int label = 0;
 /* Global variable count */
 static int glbVarCnt = 0;             
-/* Local variable count; TODO: remember to reset to 0! */
+/* Local variable count */
 static int locVarCnt = 0;             
-/* Parameter count; TODO: remember to reset to 0! */
+/* Parameter count */
 static int paramCnt = 0;             
-/* Argument count; TODO: remember to reset to 0! */
+/* Argument count */
 static int argCnt = 0;             
 /* Parsing state */
 static eParseState pState = sGlobal;
@@ -34,17 +34,6 @@ void mvSP(eSpOp op, int delta) {
     printf("\tpop\tsp\n");
 }
 
-/* Get hash table depending on global parsing state */
-/*VarNode* getHashTable() {*/
-    /*[> Select table depending on parsing state context <]*/
-    /*if (pState == sGlobal) {*/
-        /*printf("> global table\n");*/
-        /*return globalVarTable;*/
-    /*} */
-    /*printf("> local table\n");*/
-    /*return localVarTable;*/
-/*}*/
-
 /* [IMPORTANT] */
 /* Update variable info in hash table AND stack */
 void updateVar(Node* node) {
@@ -52,13 +41,11 @@ void updateVar(Node* node) {
     VarNode* varNode = &node->id;
 
     /*printf("Start updating...\n");*/
-    /*VarNode* table = getHashTable();*/
     VarNode* varEntry;
 
     /*printf("[c5c.c] updateVar(): %s dataType updated to %d\n", cpy->name, cpy->dataType);*/
     
     /*printf("Looking for {%s} in table...\n", varNode->name);*/
-    /*HASH_FIND_STR( table, varNode->name, varEntry );*/
     switch(pState) {
         case sGlobal:
             HASH_FIND_STR( globalVarTable, varNode->name, varEntry );
@@ -89,9 +76,7 @@ void updateVar(Node* node) {
                 break;
         }
         /*printf("updateVar() [S%d] added var %s to table\n", pState, varEntry->name);*/
-    } /* else {  // Update
-        printf("\tpop\tsb[%d]\n", varEntry->idx);
-    } */
+    } 
     /* Update stack */
     switch(pState) {
         case sGlobal:
@@ -110,9 +95,7 @@ void updateVar(Node* node) {
 void getVar(Node* node) {
     assert(node->nodeType == typeId);
     VarNode* varNode = &node->id;
-    /*VarNode* table = getHashTable();*/
     VarNode* varEntry = NULL;
-    /*HASH_FIND_STR( table, node->id.name, varEntry );*/
     switch(pState) {
         case sGlobal:
             /*printf("getVar() [global] Looking for %s in global table\n", varNode->name);*/
@@ -120,9 +103,7 @@ void getVar(Node* node) {
             printf("\tpush\tsb[%d]\n", varEntry->offset);
             break;
         case sFuncParam:
-            /* FIXME: Nothing needs to be done */
             /*printf("funcParam ~ getVar(%s)\n", varNode->name);*/
-            /*updateVar(node); <- redundant */
             varEntry = malloc(sizeof(VarNode));
             strncpy(varEntry->name, varNode->name, strlen(varNode->name) + 1);
             varEntry->offset = -(4 + paramCnt++);
@@ -340,7 +321,7 @@ int ex(Node *p) {
               break;
 
             /* 0:expr */
-            case RET:  /* TODO: Return statement */
+            case RET:  /* Return statement */
               /*printf("[c5c.c] RET case\n");*/
               ex(p->opr.op[0]);
               printf("\tret\n");
@@ -359,7 +340,7 @@ int ex(Node *p) {
               ex(p->opr.op[0]);
               break;
 
-            case EXP_LS:  /* TODO: Expression list (for function calls) */
+            case EXP_LS:  /* Expression list (for function calls) */
               /*printf("[c5c.c] expr_list case\n");*/
               /* For function calls, parse from left to right */
               ex(p->opr.op[0]);
