@@ -8,27 +8,25 @@ L000:
 	push	100
 	add
 	pop	sp
-	push	fp[-5]
 	push	fp[-4]
-	compgt
+	push	0
+	compeq
 	j0	L001
-	push	fp[-5]
+	push	1
 	ret
 L001:
 	push	fp[-4]
+	push	fp[-4]
+	push	1
+	sub
+	call	L000, 1
+	mul
 	ret
 L999:
-	push	"Enter 2 numbers: "
+	push	"Enter a number:"
 	puts
 	geti
 	pop	sb[0]
-	geti
-	pop	sb[1]
 	push	sb[0]
-	push	sb[1]
-	call	L000, 2
-	pop	sb[2]
-	push	sb[2]
-	puti_
-	push	" is larger"
-	puts
+	call	L000, 1
+	puti
