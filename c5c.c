@@ -334,8 +334,9 @@ int ex(Node *p) {
               pState = sGlobal;
               /* Clear local var table */
               HASH_CLEAR(hh, localVarTable);
-              /*printf("{RET} local var table cleared\n");*/
+              /*printf("local var table cleared\n");*/
               locVarCnt = 0;
+              printf("\tret\n");  /* In case there's no return statement */
               break;
 
             /* 0:expr */

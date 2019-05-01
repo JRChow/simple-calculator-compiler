@@ -22,6 +22,7 @@ L001:
 	call	L000, 1
 	mul
 	ret
+	ret
 L999:
 	push	"Enter a number:"
 	puts

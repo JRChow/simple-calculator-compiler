@@ -11,17 +11,38 @@
 
 Note that there's an abstraction that compiles and executes together. `./run.sh fact` is equivalent to the above three instructions.
 
-## A Few Notes
+You can also run *all* the test cases in `/test` with `./run_all.sh`.
+
+## Design of My Language
 
 - Global variables will only be *referenced* inside functions but never redefined.
-- Can consider using a label `main:` in `c5` if necessary...
-- Function declaration and return should be `stmt`
-- Function body should also be statements (function within function is not required)
-- Function call should be an `expr`
-- OK to have both function declaration and body as statements 
-- For both main and functions, need to adjust `sp` at the beginning to point above local variables
-- Use a boolean variable to indicate I'm parsing inside a function body, so can use `fp` instead of `sb` which is for the main program
-- I plan to allow for 1,000 global variables, and 100 local variables for each function call
+- I allow for 1,000 global variables, and 100 local variables for each function call
+- Variable names are case-insensitive. Maximum 12 characters.
+
+A program consists of two parts: function definition and the main section. `Main:` here is different from C's main--it's just the outmost scope. Function definitions can reference global variables in the main section. An example program is shown below:
+
+```
+// -- Function definitions --
+// ...
+func addOne(x) {
+    result = x + one;
+    return result;
+}
+// ...
+
+// -- Main section --
+Main:
+one = 1;
+puti(addOne(10));
+```
+
+The result would be 11.
+
+## Test Cases
+
+- Reverse string [test/t5-rev-c.sc](./test/t5-rev-c.sc)
+- Max of two numbers [test/t5-max.sc](./test/t5-max.sc)
+- Recursive factorial [test/t5-fact-recursive.sc](./test/t5-fact-recursive.sc)
 
 ## General TODO
 
@@ -48,4 +69,4 @@ Note that there's an abstraction that compiles and executes together. `./run.sh 
 
 ## Future Work
 - [ ] Avoid the use of `main:` label and allow function declarations *everywhere*.
-- [ ] Clean up code
+

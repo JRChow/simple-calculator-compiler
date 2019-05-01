@@ -23,6 +23,7 @@ L000:
 L001:
 	push	fp[-4]
 	ret
+	ret
 L002:
 	push	sp
 	push	100
@@ -31,6 +32,7 @@ L002:
 	push	fp[-5]
 	push	fp[-4]
 	mul
+	ret
 	ret
 L999:
 	push	789

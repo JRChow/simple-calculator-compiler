@@ -20,6 +20,7 @@ L000:
 L001:
 	push	0
 	ret
+	ret
 L999:
 	push	"Please enter a line:"
 	puts

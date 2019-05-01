@@ -17,6 +17,7 @@ L000:
 L001:
 	push	fp[-4]
 	ret
+	ret
 L999:
 	push	"Enter 2 numbers: "
 	puts
