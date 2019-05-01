@@ -32,7 +32,7 @@ void yyerror(char *);
 
 "func"   return FUNC;
 "return" return RET;
-"main:"  return MAIN;
+"Main:"  return MAIN;
 
 [a-zA-Z][a-zA-Z0-9]*  { 
                         strncpy(yylval.varName, yytext, strlen(yytext) + 1);

@@ -6,11 +6,6 @@
 #include "calc3.h"
 #include "y.tab.h"
 
-/* Stack operations: increment or decrement */
-typedef enum { opInc, opDec } eSpOp;
-/* TODO: Parsing state: global, function parameters, function body */
-typedef enum { sGlobal, sFuncParam, sFuncBody } eParseState;
-
 /* Label */
 static int label = 0;
 /* Global variable count */
@@ -26,8 +21,8 @@ static eParseState pState = sGlobal;
 
 /* Move SP (stack pointer) */
 void mvSP(eSpOp op, int delta) {
-    printf("\tpush sp\n");
-    printf("\tpush %d\n", delta);
+    printf("\tpush\tsp\n");
+    printf("\tpush\t%d\n", delta);
     switch(op) {
         case opInc:
             printf("\tadd\n");
@@ -36,17 +31,19 @@ void mvSP(eSpOp op, int delta) {
             printf("\tsub\n");
             break;
     }
-    printf("\tpop sp\n");
+    printf("\tpop\tsp\n");
 }
 
 /* Get hash table depending on global parsing state */
-VarNode* getHashTable() {
-    /* Select table depending on parsing state context */
-    if (pState == sGlobal) {
-        return globalVarTable;
-    } 
-    return localVarTable;
-}
+/*VarNode* getHashTable() {*/
+    /*[> Select table depending on parsing state context <]*/
+    /*if (pState == sGlobal) {*/
+        /*printf("> global table\n");*/
+        /*return globalVarTable;*/
+    /*} */
+    /*printf("> local table\n");*/
+    /*return localVarTable;*/
+/*}*/
 
 /* [IMPORTANT] */
 /* Update variable info in hash table AND stack */
@@ -55,13 +52,20 @@ void updateVar(Node* node) {
     VarNode* varNode = &node->id;
 
     /*printf("Start updating...\n");*/
-    VarNode* table = getHashTable();
+    /*VarNode* table = getHashTable();*/
     VarNode* varEntry;
 
     /*printf("[c5c.c] updateVar(): %s dataType updated to %d\n", cpy->name, cpy->dataType);*/
     
     /*printf("Looking for {%s} in table...\n", varNode->name);*/
-    HASH_FIND_STR( table, varNode->name, varEntry );
+    /*HASH_FIND_STR( table, varNode->name, varEntry );*/
+    switch(pState) {
+        case sGlobal:
+            HASH_FIND_STR( globalVarTable, varNode->name, varEntry );
+            break;
+        default:
+            HASH_FIND_STR( localVarTable, varNode->name, varEntry );
+    }
 
     if (varEntry == NULL) {  /* Declaration */
         /* Create new hash table entry 
@@ -69,20 +73,22 @@ void updateVar(Node* node) {
         varEntry = malloc(sizeof(VarNode));  /* Copy of var node */
         /* Copy name */
         strncpy(varEntry->name, varNode->name, strlen(varNode->name) + 1);
-        /* Determine offset */
+        /* Determine offset & update hash table */
         switch(pState) {
             case sGlobal:
                 varEntry->offset = glbVarCnt++;
+                HASH_ADD_STR( globalVarTable, name, varEntry );
                 break;
             case sFuncParam:
                 varEntry->offset = -(4 + paramCnt++);
+                HASH_ADD_STR( localVarTable, name, varEntry );
                 break;
             case sFuncBody:
                 varEntry->offset = locVarCnt++;
+                HASH_ADD_STR( localVarTable, name, varEntry );
                 break;
         }
-        /* Update hash table */
-        HASH_ADD_STR( table, name, varEntry );
+        /*printf("updateVar() [S%d] added var %s to table\n", pState, varEntry->name);*/
     } /* else {  // Update
         printf("\tpop\tsb[%d]\n", varEntry->idx);
     } */
@@ -106,23 +112,31 @@ void getVar(Node* node) {
     VarNode* varNode = &node->id;
     /*VarNode* table = getHashTable();*/
     VarNode* varEntry = NULL;
-    /*printf("Looking for %s...\n", n->id.name);*/
     /*HASH_FIND_STR( table, node->id.name, varEntry );*/
     switch(pState) {
         case sGlobal:
+            /*printf("getVar() [global] Looking for %s in global table\n", varNode->name);*/
             HASH_FIND_STR( globalVarTable, varNode->name, varEntry );
             printf("\tpush\tsb[%d]\n", varEntry->offset);
             break;
         case sFuncParam:
-            /* Nothing needs to be done */
+            /* FIXME: Nothing needs to be done */
+            /*printf("funcParam ~ getVar(%s)\n", varNode->name);*/
+            /*updateVar(node); <- redundant */
+            varEntry = malloc(sizeof(VarNode));
+            strncpy(varEntry->name, varNode->name, strlen(varNode->name) + 1);
+            varEntry->offset = -(4 + paramCnt++);
+            HASH_ADD_STR( localVarTable, name, varEntry );
             break;
         case sFuncBody:
             /* First, query local var table */
+            /*printf("getVar() [S%d] Looking for %s in local table\n", pState, varNode->name);*/
             HASH_FIND_STR( localVarTable, varNode->name, varEntry );
 
             if (varEntry != NULL) {  /* If found local variable */
                 printf("\tpush\tfp[%d]\n", varEntry->offset);
             } else {  /* If not found, add to global variable table */
+                /*printf("... %s not found in local table\n", varNode->name);*/
                 varEntry = malloc(sizeof(VarNode));
                 strncpy(varEntry->name, varNode->name, strlen(varNode->name) + 1);
                 varEntry->offset = glbVarCnt++;
@@ -137,13 +151,16 @@ void getVar(Node* node) {
 int getFuncLabel(Node* node) {
     assert(node->nodeType == typeId);
     VarNode* varNode = &node->id;
+    /*printf("getFuncLabel(%s)\n", varNode->name);*/
     FuncInfo* funcEntry;
     HASH_FIND_STR ( funcTable, varNode->name, funcEntry );
     /* If function name not found, create new entry */
     if (funcEntry == NULL) {
+        /*printf("--- entry not found for func %s\n", varNode->name);*/
         funcEntry = malloc(sizeof(FuncInfo));
         strncpy(funcEntry->name, varNode->name, strlen(varNode->name) + 1);
         funcEntry->label = label++;
+        HASH_ADD_STR ( funcTable, name, funcEntry );
     }
     return funcEntry->label;
 }
@@ -318,16 +335,22 @@ int ex(Node *p) {
 
             /* 0:expr */
             case RET:  /* TODO: Return statement */
-              printf("[c5c.c] RET case\n");
+              /*printf("[c5c.c] RET case\n");*/
               ex(p->opr.op[0]);
               printf("\tret\n");
               /* Clear local var table */
               HASH_CLEAR(hh, localVarTable);
+              /*printf("local var table cleared\n");*/
               locVarCnt = 0;
               break;
 
+            case MAIN:
+              printf("L999:\n");
+              ex(p->opr.op[0]);
+              break;
+
             case VAR_LS:  /* Parameter list (for function definition) */
-              printf("[c5c.c] var_list case\n");
+              /*printf("[c5c.c] var_list \n");*/
               assert(pState == sFuncParam);
               /* For function definition, parse from right to left */
               updateVar(p->opr.op[1]);
@@ -335,7 +358,7 @@ int ex(Node *p) {
               break;
 
             case EXP_LS:  /* TODO: Expression list (for function calls) */
-              printf("[c5c.c] expr_list case\n");
+              /*printf("[c5c.c] expr_list case\n");*/
               /* For function calls, parse from left to right */
               ex(p->opr.op[0]);
               ex(p->opr.op[1]);
@@ -347,13 +370,13 @@ int ex(Node *p) {
             case CALL:  /* Function call */
               /*printf("[c5c.c] CALL case\n");*/
               if (p->opr.nops == 1) {  /* No argument */
-                  printf("\tcall\tL%03d, %d", getFuncLabel(p->opr.op[0]), 0);
+                  printf("\tcall\tL%03d, %d\n", getFuncLabel(p->opr.op[0]), 0);
               } else {  /* Have >= 1 argument */
                   assert(p->opr.nops == 2);
                   /* Push expr_list from left to right to stack */
                   argCnt = 1;  /* Not 0! */
                   ex(p->opr.op[1]);
-                  printf("\tcall\tL%03d, %d", getFuncLabel(p->opr.op[0]), 0);
+                  printf("\tcall\tL%03d, %d\n", getFuncLabel(p->opr.op[0]), argCnt);
               }
               break;
 

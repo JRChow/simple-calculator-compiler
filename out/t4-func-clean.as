@@ -21,7 +21,7 @@ L000:
     pop fp[-4]
 L001:
     push fp[-4]
-    return
+    ret
     
 L002:
     push sp
@@ -31,7 +31,7 @@ L002:
     push fp[-4]
     push fp[-5]
     mul
-    return
+    ret
 
 L999:
     push -1

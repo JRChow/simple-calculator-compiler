@@ -13,8 +13,10 @@ int ex(Node *p);
 int yylex(void);
 void yyerror(char *s);
 
-VarNode* sym = NULL;  /* Hash table */
-
+/* Hash tables */
+FuncInfo* funcTable     = NULL;
+VarNode* globalVarTable = NULL;
+VarNode* localVarTable  = NULL;
 
 %}
 
@@ -50,7 +52,7 @@ VarNode* sym = NULL;  /* Hash table */
 %%
 
 program:
-        function                { /* exit(0); */ /* Commented for a second pass */ }
+        function  { exit(0);  /* Commented for a second pass */ }
         ;
 
 function:
@@ -79,6 +81,7 @@ stmt:
         | FUNC VARIABLE '(' ')' stmt           { $$ = opr(FUNC, 2, id($2), $5); /* NEW */ }
         | FUNC VARIABLE '(' var_list ')' stmt  { $$ = opr(FUNC, 3, id($2), $4, $6); /* NEW */ }
         | RET expr ';'  { $$ = opr(RET, 1, $2); /* NEW */ }
+        | MAIN stmt     { $$ = opr(MAIN, 1, $2); }
         ;
 
 stmt_list:
@@ -214,9 +217,9 @@ int main(int argc, char **argv) {
     extern FILE* yyin;
     yyin = fopen(argv[1], "r");
     /* Pre-allocate stack space for 1000 global variables */
-    mvSp(opInc, 1000);
+    mvSP(opInc, 1000);
     /* Jump immediately to Main (L999) */
-    printf("jmp L999\n");
+    printf("\tjmp\tL999\n");
     yyparse();
     return 0;
 }

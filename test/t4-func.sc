@@ -9,12 +9,11 @@ func abs(x) {
 func mul(x, y) {
     return x * y;
 }
-
-MAIN:
-x = -1;
+Main:
+x = -789;
 z = 0;
 puti(abs(x));
-puts("should see 1");
+puts("should see 789");
 puti(x);
-puts("should see -1");
+puts("should see -789");
 

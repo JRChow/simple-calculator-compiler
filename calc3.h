@@ -3,6 +3,11 @@
 typedef enum { typeCon, typeId, typeOpr } nodeEnum;
 typedef enum { typeInt, typeChr, typeStr } dataEnum;
 typedef enum { typeLocal, typeGlobal } scopeEnum;
+/* Stack operations: increment or decrement */
+typedef enum { opInc, opDec } eSpOp;
+/* TODO: Parsing state: global, function parameters, function body */
+typedef enum { sGlobal, sFuncParam, sFuncBody } eParseState;
+
 
 /* Constants */
 typedef struct {
