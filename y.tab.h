@@ -114,7 +114,7 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 23 "c5.y"
+#line 24 "c5.y"
 {
     int iValue;        /* Integer value */
     char cValue;       /* Character value */

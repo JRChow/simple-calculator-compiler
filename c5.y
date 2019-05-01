@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
+#include <ctype.h>
 #include "calc3.h"
 
 Node* opr(int oper, int nops, ...);
@@ -168,6 +169,7 @@ Node* id(char* name) {
     /* Set type */
     p->nodeType = typeId;
     /* Set name */
+    for(char* p = name; *p; ++p) *p = tolower(*p);  /* Convert to lowercase */
     strncpy(p->id.name, name, strlen(name) + 1);
 
     /*printf("[c5.y] created ID: %s\n", name);*/
