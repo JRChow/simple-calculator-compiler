@@ -37,8 +37,7 @@ Actual output nas code
 // inFunc = T
 L000:  // func abs -> not in Function table, add
     push -1   // Note: sp movement skipped here
-    pop fp[0] // neg = -1;
-    // Look up x in local table -> hit
+    pop fp[0] // neg = -1; // Look up x in local table -> hit
     push fp[-4]
     // Look up z in local table -> no -> lookup z in global table -> no -> new var
     push sb[0]
@@ -77,8 +76,24 @@ L002:
 L999:
     // x = -1; 
     // x -> sb[2]
-    push -1;
-    pop sb[2];  // OK well there's no other way than to pre-allocate space for variables...
+    push -1
+    pop sb[2]  // OK well there's no other way than to pre-allocate space for variables...
+    // z = 0
+    // Lookup -> z = sb[0]
+    push 0
+    pop sb[0]
+    // CALL abs(x)
+    push sb[0]
+    // abs -> label 0
+    // get #params from node
+    CALL L000, 1
+    puti
+    push "should see 1"
+    puts
+    push sb[2]
+    puti
+    push "should see -1"
+    puts
 
 
 ================================

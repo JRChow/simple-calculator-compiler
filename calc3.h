@@ -17,8 +17,7 @@ typedef struct {
 /* Variables */
 typedef struct {
     char name[13];      /* Key: name of variable */
-    scopeEnum scope;
-    int idx;            /* Subscript to pointer */
+    int offset;         /* Offset from pointer */
     UT_hash_handle hh;  /* Make this struct hashable */
 } VarNode;
 
@@ -41,4 +40,18 @@ typedef struct nodeTypeTag {
   };
 } Node;
 
-extern VarNode* sym;  /* Hash table */
+/* ------------- Hash Tables ------------ */
+
+/* Function info */
+typedef struct {
+    char name[13];      /* Key: name of function */
+    int label;          /* Label number */
+    UT_hash_handle hh;  /* Make this struct hashable */
+} FuncInfo;
+
+/* Function-label table */
+extern FuncInfo* funcTable;
+/* Global variable hash table */
+extern VarNode* globalVarTable;  
+/* Local variable hash table */
+extern VarNode* localVarTable;  

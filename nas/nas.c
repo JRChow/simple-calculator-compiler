@@ -1110,7 +1110,7 @@ YY_RULE_SETUP
 case 53:
 YY_RULE_SETUP
 #line 89 "nas.l"
-yyerror("Unknown character");
+printf("Unknown character %c\n", *yytext);
 	YY_BREAK
 case 54:
 YY_RULE_SETUP

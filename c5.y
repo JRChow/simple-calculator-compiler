@@ -8,6 +8,7 @@ Node* opr(int oper, int nops, ...);
 Node* id(char* name);
 Node* con(void* value, dataEnum type);
 void freeNode(Node *p);
+void mvSP(eSpOp op, int delta);
 int ex(Node *p);
 int yylex(void);
 void yyerror(char *s);
@@ -33,6 +34,7 @@ VarNode* sym = NULL;  /* Hash table */
 %token GETI GETC GETS
 %token PUTI PUTI_ PUTC PUTC_ PUTS PUTS_
 %token FUNC RET CALL MAIN
+%token VAR_LS EXP_LS
 %nonassoc IFX
 %nonassoc ELSE
 
@@ -85,13 +87,13 @@ stmt_list:
         ;
 
 var_list:
-        var_list ',' VARIABLE  { $$ = opr(',', 2, $1, id($3)); /* NEW */ }
+        var_list ',' VARIABLE  { $$ = opr(VAR_LS, 2, $1, id($3)); /* NEW */ }
         | VARIABLE             { $$ = id($1); }
         ;
 
 expr_list:
-         expr
-         | expr_list ',' expr
+         expr                  { $$ = $1;                     }
+         | expr_list ',' expr  { $$ = opr(EXP_LS, 2, $1, $3); }
          ;
 
 expr:
@@ -211,6 +213,10 @@ void yyerror(char *s) {
 int main(int argc, char **argv) {
     extern FILE* yyin;
     yyin = fopen(argv[1], "r");
+    /* Pre-allocate stack space for 1000 global variables */
+    mvSp(opInc, 1000);
+    /* Jump immediately to Main (L999) */
+    printf("jmp L999\n");
     yyparse();
     return 0;
 }

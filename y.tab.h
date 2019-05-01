@@ -61,15 +61,17 @@
      RET = 277,
      CALL = 278,
      MAIN = 279,
-     IFX = 280,
-     ELSE = 281,
-     OR = 282,
-     AND = 283,
-     NE = 284,
-     EQ = 285,
-     LE = 286,
-     GE = 287,
-     UMINUS = 288
+     VAR_LS = 280,
+     EXP_LS = 281,
+     IFX = 282,
+     ELSE = 283,
+     OR = 284,
+     AND = 285,
+     NE = 286,
+     EQ = 287,
+     LE = 288,
+     GE = 289,
+     UMINUS = 290
    };
 #endif
 /* Tokens.  */
@@ -95,22 +97,24 @@
 #define RET 277
 #define CALL 278
 #define MAIN 279
-#define IFX 280
-#define ELSE 281
-#define OR 282
-#define AND 283
-#define NE 284
-#define EQ 285
-#define LE 286
-#define GE 287
-#define UMINUS 288
+#define VAR_LS 280
+#define EXP_LS 281
+#define IFX 282
+#define ELSE 283
+#define OR 284
+#define AND 285
+#define NE 286
+#define EQ 287
+#define LE 288
+#define GE 289
+#define UMINUS 290
 
 
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 20 "c5.y"
+#line 21 "c5.y"
 {
     int iValue;        /* Integer value */
     char cValue;       /* Character value */
@@ -119,7 +123,7 @@ typedef union YYSTYPE
     char varName[13];  /* String value */
 }
 /* Line 1529 of yacc.c.  */
-#line 123 "y.tab.h"
+#line 127 "y.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
