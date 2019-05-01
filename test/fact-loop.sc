@@ -1,5 +1,6 @@
 // FACTORIAL(x)
-
+Main:
+puts("Enter a number:");
 geti(x);
 if (x == 0)
   puti(1);

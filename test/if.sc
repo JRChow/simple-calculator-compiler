@@ -1,3 +1,4 @@
+Main:
 puts("Enter an int: ");
 geti(x);
 puti_(x);

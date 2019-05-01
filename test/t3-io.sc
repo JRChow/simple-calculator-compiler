@@ -1,3 +1,4 @@
+Main:
 a = 1;
 b = 'b';
 c = "This is C babe! ";

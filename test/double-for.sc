@@ -1,3 +1,4 @@
+Main:
 puts("Gonna see:");
 puts("0..3");
 puts("0..4");

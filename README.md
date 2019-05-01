@@ -48,4 +48,4 @@ Note that there's an abstraction that compiles and executes together. `./run.sh 
 
 ## Future Work
 - [ ] Avoid the use of `main:` label and allow function declarations *everywhere*.
-
+- [ ] Clean up code

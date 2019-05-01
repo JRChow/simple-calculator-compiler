@@ -1,10 +1,11 @@
+Main:
 // Declaration
 x0 = 7;
 y1 = 'y';
-z2 = "Wat the fuck?";
+z2 = "Wat the f**k?";
 
 puti(x0);  // 7
-puts(z2);  // "Wat the fuck?"
+puts(z2);  // "Wat the f**k?"
 putc(y1);  // 'y'
 
 // Update

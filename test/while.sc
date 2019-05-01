@@ -1,3 +1,4 @@
+Main:
 puts("How many times? ");
 geti(n);
 while (n > 0) {

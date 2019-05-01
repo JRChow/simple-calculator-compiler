@@ -1,3 +1,4 @@
+Main:
 puts("Enter a char: ");
 getc(c);
 putc(c);
