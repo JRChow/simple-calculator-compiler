@@ -27,15 +27,15 @@ Note that there's an abstraction that compiles and executes together. `./run.sh 
 
 - [x] Maybe add `end` at the end? Nah, I think it's used for functions.
 - [x] Add the constraint that the maximum variable name length is 12 characters
-- [ ] Need to distinguish between global and local variables
+- [x] Need to distinguish between global and local variables
 - [x] Variable modification after definition
 - [x] Finish remaining non-functional language features (e.g., `for`, `while`, `if`)
 - [ ] Deal with variable naming case insensitivity
 - [x] Use `func xx() { ... }` and `xx();` to differentiate function definition and call
-- [ ] Is there a need to distinguish between function and variable names? I guess no need, just store them in separate tables
-- [ ] Probably use two tables, one for global and one for local?
-- [ ] Pre-allocate stack space for global & local variables
-- [ ] Label/offset should be defined by the first appearance of function/variable declaration OR reference
+- [x] Is there a need to distinguish between function and variable names? I guess no need, just store them in separate tables
+- [x] Probably use two tables, one for global and one for local?
+- [x] Pre-allocate stack space for global & local variables
+- [x] Label/offset should be defined by the first appearance of function/variable declaration OR reference
 
 ## General FIXME
 

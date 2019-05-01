@@ -127,6 +127,7 @@ void getVar(Node* node) {
             strncpy(varEntry->name, varNode->name, strlen(varNode->name) + 1);
             varEntry->offset = -(4 + paramCnt++);
             HASH_ADD_STR( localVarTable, name, varEntry );
+            /*printf("getVar() [param] %s added to local table\n", varNode->name);*/
             break;
         case sFuncBody:
             /* First, query local var table */
@@ -136,7 +137,7 @@ void getVar(Node* node) {
             if (varEntry != NULL) {  /* If found local variable */
                 printf("\tpush\tfp[%d]\n", varEntry->offset);
             } else {  /* If not found, add to global variable table */
-                /*printf("... %s not found in local table\n", varNode->name);*/
+                /*printf("getVar() %s not found in local table\n", varNode->name);*/
                 varEntry = malloc(sizeof(VarNode));
                 strncpy(varEntry->name, varNode->name, strlen(varNode->name) + 1);
                 varEntry->offset = glbVarCnt++;
@@ -331,6 +332,10 @@ int ex(Node *p) {
                   ex(p->opr.op[2]);
               }
               pState = sGlobal;
+              /* Clear local var table */
+              HASH_CLEAR(hh, localVarTable);
+              /*printf("{RET} local var table cleared\n");*/
+              locVarCnt = 0;
               break;
 
             /* 0:expr */
@@ -338,10 +343,6 @@ int ex(Node *p) {
               /*printf("[c5c.c] RET case\n");*/
               ex(p->opr.op[0]);
               printf("\tret\n");
-              /* Clear local var table */
-              HASH_CLEAR(hh, localVarTable);
-              /*printf("local var table cleared\n");*/
-              locVarCnt = 0;
               break;
 
             case MAIN:
